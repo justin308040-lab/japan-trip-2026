@@ -405,8 +405,6 @@ footer{position:relative;text-align:center;padding:3rem 2rem 2rem;color:var(--te
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy, writeBatch }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAhDNmsWpSzDhYxmQIhG694U_AkugUeHAw",
@@ -418,7 +416,6 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 const TRIP_START = new Date('2026-06-13T00:00:00+09:00');
 const TRIP_END   = new Date('2026-06-21T23:59:59+09:00');
@@ -581,9 +578,8 @@ function renderShopping(){
       <div class="shop-actions"><button class="icon-btn edit" title="編輯">✏️</button><button class="icon-btn del" title="刪除">🗑️</button></div>`;
     card.querySelector('.chk').addEventListener('click',()=>updateDoc(doc(db,'shopping',s.id),{bought:!s.bought}));
     card.querySelector('.edit').addEventListener('click',()=>openShopEditor(s));
-    card.querySelector('.del').addEventListener('click',async()=>{
+    card.querySelector('.del').addEventListener('click',()=>{
       if(!confirm(`確定刪除「${s.name}」？`))return;
-      if(s.photoPath)deleteObject(sRef(storage,s.photoPath)).catch(()=>{});
       deleteDoc(doc(db,'shopping',s.id));
     });
     shopGrid.appendChild(card);
@@ -656,7 +652,7 @@ function openDayEditor(d){
 
 let pendingPhotoFile=null;
 function openShopEditor(s){
-  const isNew=!s; s=s||{name:'',note:'',bought:false,photoUrl:'',photoPath:''}; pendingPhotoFile=null;
+  const isNew=!s; s=s||{name:'',note:'',bought:false,photoUrl:''}; pendingPhotoFile=null;
   openModal(isNew?'新增購物項目':'編輯購物項目',`
     <div class="field"><label>品項名稱</label><input id="s-name"></div>
     <div class="field"><label>備註 / 價格 / 在哪買</label><input id="s-note" placeholder="例：榮三越 ¥3,000"></div>
@@ -665,17 +661,13 @@ function openShopEditor(s){
       <div class="hint">上傳後自動壓縮、雲端儲存，家人都看得到</div></div>
   `,async()=>{
     const name=val('s-name').trim(); if(!name){alert('請輸入品項名稱');return;}
-    const data={name,note:val('s-note').trim(),bought:document.getElementById('s-bought').checked,photoUrl:s.photoUrl||'',photoPath:s.photoPath||''};
     document.getElementById('modal-save').textContent='儲存中…';
     try{
-      let docId=s.id;
-      if(isNew){const order=Math.max(0,...state.shopping.map(x=>x.order||0))+1;const ref=await addDoc(collection(db,'shopping'),{...data,order});docId=ref.id;}
+      let photoUrl=s.photoUrl||'';
+      if(pendingPhotoFile){ photoUrl=await resizePhoto(pendingPhotoFile); }
+      const data={name,note:val('s-note').trim(),bought:document.getElementById('s-bought').checked,photoUrl};
+      if(isNew){const order=Math.max(0,...state.shopping.map(x=>x.order||0))+1;await addDoc(collection(db,'shopping'),{...data,order});}
       else await updateDoc(doc(db,'shopping',s.id),data);
-      if(pendingPhotoFile){
-        if(s.photoPath)deleteObject(sRef(storage,s.photoPath)).catch(()=>{});
-        const r=await uploadPhoto(pendingPhotoFile,docId);
-        await updateDoc(doc(db,'shopping',docId),{photoUrl:r.url,photoPath:r.path});
-      }
       closeModal();toast(isNew?'已新增 ✓':'已儲存 ✓');
     }catch(e){alert('儲存失敗：'+e.message);document.getElementById('modal-save').textContent='儲存';}
   });
@@ -688,14 +680,14 @@ function openShopEditor(s){
   });
 }
 
-function uploadPhoto(file,id){
+// 壓縮成小尺寸 dataURL，直接存進 Firestore（免 Storage、免費）
+function resizePhoto(file){
   return new Promise((res,rej)=>{
     const img=new Image(),r=new FileReader();
     r.onload=e=>{img.onerror=rej;img.onload=()=>{
-      const max=1000;let w=img.width,h=img.height;if(w>h&&w>max){h=h*max/w;w=max;}else if(h>max){w=w*max/h;h=max;}
+      const max=700;let w=img.width,h=img.height;if(w>h&&w>max){h=h*max/w;w=max;}else if(h>max){w=w*max/h;h=max;}
       const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);
-      cv.toBlob(async blob=>{try{const path=`shopping/${id}/${Date.now()}.jpg`;const ref=sRef(storage,path);
-        await uploadBytes(ref,blob);const url=await getDownloadURL(ref);res({url,path});}catch(err){rej(err);}},'image/jpeg',.82);
+      res(cv.toDataURL('image/jpeg',.6));
     };img.src=e.target.result;};
     r.onerror=rej;r.readAsDataURL(file);
   });
