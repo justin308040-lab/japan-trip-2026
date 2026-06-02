@@ -39,12 +39,15 @@ body{
 @keyframes fall{0%{transform:translateY(-30px) rotate(0);opacity:0}8%{opacity:.85}92%{opacity:.4}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .hero-kanji{position:absolute;top:0;right:1.6rem;writing-mode:vertical-rl;font-size:.72rem;
   color:rgba(60,40,30,.22);letter-spacing:.45rem;font-weight:400;pointer-events:none;z-index:2;padding-top:1.6rem}
-.hero-content{position:relative;z-index:4;padding:1rem}
+.hero-content{position:relative;z-index:4;padding:1.6rem 2.2rem;border-radius:26px;
+  background:rgba(250,244,232,.62);backdrop-filter:blur(7px);border:1px solid rgba(255,255,255,.5);
+  box-shadow:0 10px 44px rgba(60,40,30,.18)}
 .hero-flag{font-size:3.4rem;animation:pulse 2.5s ease-in-out infinite;display:block;margin-bottom:.4rem}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.hero h1{font-size:clamp(1.7rem,5.5vw,3.5rem);font-weight:900;letter-spacing:3px;
-  background:linear-gradient(90deg,#c1432e,#bd9a23,#6b8e4e,#2c3e6b);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero h1{font-size:clamp(1.9rem,6vw,3.7rem);font-weight:900;letter-spacing:3px;
+  background:linear-gradient(90deg,#a8341f,#9a7d1a,#4d6b35,#1f2d52);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 2px 3px rgba(255,255,255,.6))}
 .hero-line{display:block;width:60px;height:2px;background:#c1432e;margin:.6rem auto;box-shadow:0 0 6px rgba(193,67,46,.4)}
 .hero-sub{font-size:.9rem;color:#7a6450;letter-spacing:4px;margin-bottom:1rem;font-weight:600}
 .hero-dates{display:inline-flex;gap:.85rem;flex-wrap:wrap;justify-content:center;
@@ -314,46 +317,6 @@ footer{position:relative;text-align:center;padding:3rem 2rem 2rem;color:var(--te
   <span class="sync-dot" id="sync-dot"><i></i><span id="sync-text">連線中…</span></span>
 </div>
 
-<!-- ══ ROUTE MAP ══ -->
-<div class="section">
-  <div class="map-wrap">
-    <div class="map-title">🗾 行程路線圖</div>
-    <svg id="route-svg" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="mapbg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#e8ecf5"/><stop offset="100%" stop-color="#d6dceb"/></radialGradient>
-        <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#bd9a23"/></marker>
-      </defs>
-      <rect width="500" height="280" fill="url(#mapbg)"/>
-      <path id="r0" d="M40,260 C80,200 100,180 155,200" fill="none" stroke="#bd9a23" stroke-width="1.5" stroke-dasharray="6,4" opacity=".7" marker-end="url(#arr)"/>
-      <path id="r1" d="M155,200 C160,170 170,145 195,130" fill="none" stroke="#2c3e6b" stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200" marker-end="url(#arr)"/>
-      <path id="r2" d="M195,130 C210,110 230,105 248,100" fill="none" stroke="#6b8e4e" stroke-width="1.8" stroke-dasharray="80" stroke-dashoffset="80" marker-end="url(#arr)"/>
-      <path d="M248,100 C230,110 210,120 195,130" fill="none" stroke="#6b8e4e" stroke-width="1" stroke-dasharray="4,3" opacity=".4"/>
-      <path id="r3" d="M195,130 C220,115 240,110 258,112" fill="none" stroke="#6b8e4e" stroke-width="1.8" stroke-dasharray="80" stroke-dashoffset="80" marker-end="url(#arr)"/>
-      <path d="M258,112 C238,118 215,125 195,130" fill="none" stroke="#6b8e4e" stroke-width="1" stroke-dasharray="4,3" opacity=".4"/>
-      <path id="r4" d="M195,130 C180,148 165,165 155,200" fill="none" stroke="#c1432e" stroke-width="2" stroke-dasharray="120" stroke-dashoffset="120" marker-end="url(#arr)"/>
-      <path id="r5" d="M155,200 C180,140 240,85 275,65" fill="none" stroke="#2c3e6b" stroke-width="2" stroke-dasharray="220" stroke-dashoffset="220" marker-end="url(#arr)"/>
-      <path d="M275,65 C250,90 200,145 155,200" fill="none" stroke="#2c3e6b" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
-      <path id="r7" d="M155,200 C185,210 215,215 240,218" fill="none" stroke="#d2691e" stroke-width="1.8" stroke-dasharray="100" stroke-dashoffset="100" marker-end="url(#arr)"/>
-      <path d="M240,218 C215,215 185,210 155,200" fill="none" stroke="#d2691e" stroke-width="1" stroke-dasharray="4,3" opacity=".4"/>
-      <path id="r9" d="M155,200 C140,218 120,235 80,252 C60,258 45,262 40,260" fill="none" stroke="#bd9a23" stroke-width="1.5" stroke-dasharray="6,4" opacity=".7" marker-end="url(#arr)"/>
-      <circle cx="155" cy="200" r="9" fill="#c1432e" filter="url(#glow)"/><circle cx="155" cy="200" r="4" fill="#fff"/><text x="163" y="204" fill="#c1432e" font-size="9" font-weight="bold">名古屋</text>
-      <circle cx="195" cy="130" r="8" fill="#2c3e6b" filter="url(#glow)"/><circle cx="195" cy="130" r="3.5" fill="#fff"/><text x="204" y="134" fill="#2c3e6b" font-size="9" font-weight="bold">高山</text>
-      <circle cx="248" cy="100" r="6" fill="#6b8e4e" filter="url(#glow)"/><circle cx="248" cy="100" r="2.5" fill="#fff"/><text x="256" y="99" fill="#5a7a3e" font-size="8">新穗高</text>
-      <circle cx="258" cy="112" r="6" fill="#6b8e4e" filter="url(#glow)"/><circle cx="258" cy="112" r="2.5" fill="#fff"/><text x="266" y="117" fill="#5a7a3e" font-size="8">上高地</text>
-      <circle cx="172" cy="163" r="6" fill="#8e5aa0" filter="url(#glow)"/><circle cx="172" cy="163" r="2.5" fill="#fff"/><text x="180" y="163" fill="#8e5aa0" font-size="8">白川鄉</text>
-      <circle cx="275" cy="65" r="7" fill="#bd9a23" filter="url(#glow)"/><circle cx="275" cy="65" r="3" fill="#fff"/><text x="283" y="69" fill="#9a7d1a" font-size="8" font-weight="bold">室堂</text>
-      <circle cx="240" cy="218" r="6" fill="#d2691e" filter="url(#glow)"/><circle cx="240" cy="218" r="2.5" fill="#fff"/><text x="248" y="222" fill="#b8500f" font-size="8">馬籠・妻籠</text>
-      <circle cx="118" cy="242" r="6" fill="#999" filter="url(#glow)"/><circle cx="118" cy="242" r="2.5" fill="#fff"/><text x="126" y="246" fill="#888" font-size="8">常滑・空港</text>
-      <text x="20" y="258" font-size="10">🇹🇼</text><text x="14" y="270" fill="#888" font-size="7">台北</text>
-      <rect x="8" y="8" width="128" height="50" rx="5" fill="rgba(255,255,255,.6)"/>
-      <circle cx="20" cy="22" r="4" fill="#2c3e6b"/><text x="28" y="26" fill="#555" font-size="8">JR 特急 / 地鐵</text>
-      <circle cx="20" cy="36" r="4" fill="#6b8e4e"/><text x="28" y="40" fill="#555" font-size="8">濃飛巴士</text>
-      <line x1="15" y1="50" x2="25" y2="50" stroke="#bd9a23" stroke-width="1.5" stroke-dasharray="4,2"/><text x="28" y="54" fill="#555" font-size="8">航班</text>
-    </svg>
-  </div>
-</div>
-
 <!-- ══ ITINERARY ══ -->
 <section class="section" id="itinerary">
   <div class="section-title">📅 每日行程</div>
@@ -598,26 +561,34 @@ const WMO={0:['☀️','晴'],1:['🌤️','大致晴'],2:['⛅','多雲'],3:['�
   51:['🌦️','毛雨'],53:['🌦️','小雨'],55:['🌧️','細雨'],61:['🌧️','小雨'],63:['🌧️','中雨'],65:['🌧️','大雨'],
   71:['🌨️','小雪'],73:['🌨️','中雪'],75:['❄️','大雪'],80:['🌦️','陣雨'],81:['🌧️','陣雨'],82:['⛈️','大陣雨'],95:['⛈️','雷雨']};
 const weatherData={};
-async function fetchWeather(lat,lon,start,end){
-  try{
-    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&start_date=${start}&end_date=${end}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo&forecast_days=16`;
-    const j=await(await fetch(url)).json();
-    (j.daily?.time||[]).forEach((d,i)=>{if(weatherData[d])return;const w=WMO[j.daily.weathercode[i]]||['🌡️','—'];
-      weatherData[d]={icon:w[0],desc:w[1],tmax:Math.round(j.daily.temperature_2m_max[i]),tmin:Math.round(j.daily.temperature_2m_min[i])};});
-    updateWeatherBadges();
-  }catch(e){}
+// 各地區座標 + 六月氣候概況（超過 16 天預報範圍時的後備值）
+const regions={
+  takayama :{lat:36.146,lon:137.252,norm:{icon:'⛅',desc:'六月山區概況',tmax:24,tmin:14},dates:['2026-06-13','2026-06-14','2026-06-15']},
+  shirakawa:{lat:36.257,lon:136.906,norm:{icon:'🌦️',desc:'六月山區概況',tmax:25,tmin:15},dates:['2026-06-16']},
+  tateyama :{lat:36.583,lon:137.617,norm:{icon:'🌨️',desc:'高山殘雪寒冷',tmax:9, tmin:1 },dates:['2026-06-17']},
+  nagoya   :{lat:35.181,lon:136.907,norm:{icon:'🌧️',desc:'梅雨季概況',  tmax:28,tmin:20},dates:['2026-06-18','2026-06-19','2026-06-20','2026-06-21']},
+};
+async function loadWeather(){
+  for(const k in regions){
+    const r=regions[k]; const fc={};
+    try{
+      const url=`https://api.open-meteo.com/v1/forecast?latitude=${r.lat}&longitude=${r.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo&forecast_days=16`;
+      const j=await(await fetch(url)).json();
+      (j.daily?.time||[]).forEach((d,i)=>{const w=WMO[j.daily.weathercode[i]]||['🌡️','—'];
+        fc[d]={icon:w[0],desc:w[1],tmax:Math.round(j.daily.temperature_2m_max[i]),tmin:Math.round(j.daily.temperature_2m_min[i]),fore:true};});
+    }catch(e){}
+    r.dates.forEach(d=>{ weatherData[d]= fc[d] || {...r.norm,fore:false}; });
+  }
+  updateWeatherBadges();
 }
 function updateWeatherBadges(){
   document.querySelectorAll('.weather-badge').forEach(el=>{
     const w=weatherData[el.dataset.wdate]; if(!w)return;
     el.querySelector('.w-icon').textContent=w.icon; el.querySelector('.w-temp').textContent=`${w.tmax}°/${w.tmin}°`;
-    el.title=`${w.desc} · 高${w.tmax}° 低${w.tmin}°`;
+    el.title=(w.fore?'預報':'氣候概況')+`：${w.desc} · 高${w.tmax}° 低${w.tmin}°`;
   });
 }
-fetchWeather(36.146,137.252,'2026-06-13','2026-06-15');
-fetchWeather(36.257,136.906,'2026-06-16','2026-06-16');
-fetchWeather(36.583,137.617,'2026-06-17','2026-06-17');
-fetchWeather(35.181,136.907,'2026-06-18','2026-06-21');
+loadWeather();
 
 const modal=document.getElementById('modal'),modalTitle=document.getElementById('modal-title'),modalBody=document.getElementById('modal-body');
 let saveHandler=null;
@@ -743,13 +714,6 @@ window.addEventListener('scroll',()=>{
 let autoOpened=false;
 function autoOpenToday(){if(autoOpened)return;const diff=Math.floor((new Date().setHours(0,0,0,0)-new Date('2026-06-13').setHours(0,0,0,0))/864e5);
   if(diff>=0&&diff<state.days.length){const cards=document.querySelectorAll('.day-card');if(cards[diff]){autoOpened=true;cards[diff].classList.add('open');}}}
-
-const mapObs=new IntersectionObserver(en=>{if(!en[0].isIntersecting)return;
-  ['r1','r2','r3','r4','r5','r7'].forEach((id,i)=>{const el=document.getElementById(id);if(!el)return;
-    const len=el.getTotalLength?el.getTotalLength():200;el.style.strokeDasharray=len;el.style.strokeDashoffset=len;
-    setTimeout(()=>{el.style.transition=`stroke-dashoffset 1.2s ease ${i*.28}s`;el.style.strokeDashoffset='0';},400);});
-  mapObs.disconnect();},{threshold:.3});
-mapObs.observe(document.getElementById('route-svg'));
 
 for(let i=0;i<30;i++){const p=document.createElement('div');p.className='petal';
   p.style.cssText=`left:${Math.random()*100}vw;top:${Math.random()*-20}vh;animation-duration:${7+Math.random()*9}s;animation-delay:${Math.random()*10}s;width:${7+Math.random()*9}px;height:${7+Math.random()*9}px`;
