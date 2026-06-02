@@ -403,8 +403,8 @@ footer{position:relative;text-align:center;padding:3rem 2rem 2rem;color:var(--te
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy, writeBatch }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getDatabase, ref, onValue, push, update, remove, get }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAhDNmsWpSzDhYxmQIhG694U_AkugUeHAw",
@@ -414,8 +414,23 @@ const firebaseConfig = {
   messagingSenderId: "661650655159",
   appId: "1:661650655159:web:d95cdf482323cbe9e5ca32"
 };
+// ⬇️ Realtime Database 網址（從 Firebase 主控台「Realtime Database → 資料」分頁最上方複製）
+const DB_URL = "https://japan-trip-3f1a0-default-rtdb.firebaseio.com";
+
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = getDatabase(app, DB_URL);
+
+// ── 小工具：把 Realtime DB 物件轉成依 order 排序的陣列 ──
+function watch(name, cb){
+  onValue(ref(db,name), snap=>{
+    const v=snap.val()||{};
+    const arr=Object.entries(v).map(([id,d])=>({id,...d})).sort((a,b)=>(a.order||0)-(b.order||0));
+    cb(arr);
+  }, err=>{console.error(err);setSync('err');});
+}
+function addItem(name,data){ return push(ref(db,name),data); }
+function updateItem(name,id,data){ return update(ref(db,`${name}/${id}`),data); }
+function removeItem(name,id){ return remove(ref(db,`${name}/${id}`)); }
 
 const TRIP_START = new Date('2026-06-13T00:00:00+09:00');
 const TRIP_END   = new Date('2026-06-21T23:59:59+09:00');
@@ -479,14 +494,13 @@ const state = { days:[], packing:[], shopping:[] };
 
 async function ensureSeed(){
   try{
-    const initRef = doc(db,'meta','init');
-    const snap = await getDoc(initRef);
+    const snap = await get(ref(db,'meta/init'));
     if(snap.exists()) return;
-    await setDoc(initRef,{seededAt:Date.now()});
-    const batch = writeBatch(db);
-    defaultDays.forEach((d,i)=> batch.set(doc(db,'itinerary','d'+(i+1)),{...d,order:i+1,done:false}));
-    defaultPacking.forEach((t,i)=> batch.set(doc(collection(db,'packing')),{text:t,checked:false,order:i+1}));
-    await batch.commit();
+    const updates={};
+    updates['meta/init']={seededAt:Date.now()};
+    defaultDays.forEach((d,i)=> updates['itinerary/d'+(i+1)]={...d,order:i+1,done:false});
+    defaultPacking.forEach((t,i)=>{ const k=push(ref(db,'packing')).key; updates['packing/'+k]={text:t,checked:false,order:i+1}; });
+    await update(ref(db),updates);
   }catch(e){ console.error('seed',e); }
 }
 
@@ -495,15 +509,9 @@ function setSync(s){ syncDot.className='sync-dot '+(s==='on'?'on':s==='err'?'err
   syncText.textContent=s==='on'?'雲端同步中':s==='err'?'連線失敗':'連線中…'; }
 
 function listen(){
-  onSnapshot(query(collection(db,'itinerary'),orderBy('order')),snap=>{
-    state.days=snap.docs.map(d=>({id:d.id,...d.data()})); setSync('on'); renderDays(); updateRing();
-  },err=>{console.error(err);setSync('err');});
-  onSnapshot(query(collection(db,'packing'),orderBy('order')),snap=>{
-    state.packing=snap.docs.map(d=>({id:d.id,...d.data()})); renderPacking();
-  },err=>console.error(err));
-  onSnapshot(query(collection(db,'shopping'),orderBy('order')),snap=>{
-    state.shopping=snap.docs.map(d=>({id:d.id,...d.data()})); renderShopping();
-  },err=>console.error(err));
+  watch('itinerary',arr=>{ state.days=arr; setSync('on'); renderDays(); updateRing(); });
+  watch('packing',arr=>{ state.packing=arr; renderPacking(); });
+  watch('shopping',arr=>{ state.shopping=arr; renderShopping(); });
 }
 
 const daysC=document.getElementById('days-container'), sidebar=document.getElementById('sidebar-nav');
@@ -534,9 +542,9 @@ function renderDays(){
       if(e.target.closest('.done-btn')||e.target.closest('.day-actions'))return;
       card.classList.toggle('open');
     });
-    card.querySelector('.done-btn').addEventListener('click',e=>{e.stopPropagation();updateDoc(doc(db,'itinerary',d.id),{done:!d.done});});
+    card.querySelector('.done-btn').addEventListener('click',e=>{e.stopPropagation();updateItem('itinerary',d.id,{done:!d.done});});
     card.querySelector('.edit').addEventListener('click',e=>{e.stopPropagation();openDayEditor(d);});
-    card.querySelector('.del').addEventListener('click',e=>{e.stopPropagation();if(confirm(`確定刪除「${d.title}」？`))deleteDoc(doc(db,'itinerary',d.id));});
+    card.querySelector('.del').addEventListener('click',e=>{e.stopPropagation();if(confirm(`確定刪除「${d.title}」？`))removeItem('itinerary',d.id);});
     daysC.appendChild(card);
     const a=document.createElement('a');a.href='#day-'+(idx+1);a.textContent='D'+(idx+1);a.title=d.title;a.dataset.target='day-'+(idx+1);a.style.borderColor=d.color+'55';sidebar.appendChild(a);
   });
@@ -553,11 +561,11 @@ function renderPacking(){
     el.addEventListener('click',e=>{
       if(e.target.closest('.item-del'))return;
       if(document.body.classList.contains('editing')&&e.target.classList.contains('check-text')){
-        const nv=prompt('修改項目：',p.text); if(nv!==null&&nv.trim())updateDoc(doc(db,'packing',p.id),{text:nv.trim()}); return;
+        const nv=prompt('修改項目：',p.text); if(nv!==null&&nv.trim())updateItem('packing',p.id,{text:nv.trim()}); return;
       }
-      updateDoc(doc(db,'packing',p.id),{checked:!p.checked});
+      updateItem('packing',p.id,{checked:!p.checked});
     });
-    el.querySelector('.item-del').addEventListener('click',e=>{e.stopPropagation();deleteDoc(doc(db,'packing',p.id));});
+    el.querySelector('.item-del').addEventListener('click',e=>{e.stopPropagation();removeItem('packing',p.id);});
     packGrid.appendChild(el);
   });
 }
@@ -576,11 +584,11 @@ function renderShopping(){
       <div class="shop-info"><div class="shop-name"><span class="chk">${s.bought?'✓':''}</span><span>${esc(s.name)}</span></div>
       ${s.note?`<div class="shop-note">${esc(s.note)}</div>`:''}</div>
       <div class="shop-actions"><button class="icon-btn edit" title="編輯">✏️</button><button class="icon-btn del" title="刪除">🗑️</button></div>`;
-    card.querySelector('.chk').addEventListener('click',()=>updateDoc(doc(db,'shopping',s.id),{bought:!s.bought}));
+    card.querySelector('.chk').addEventListener('click',()=>updateItem('shopping',s.id,{bought:!s.bought}));
     card.querySelector('.edit').addEventListener('click',()=>openShopEditor(s));
     card.querySelector('.del').addEventListener('click',()=>{
       if(!confirm(`確定刪除「${s.name}」？`))return;
-      deleteDoc(doc(db,'shopping',s.id));
+      removeItem('shopping',s.id);
     });
     shopGrid.appendChild(card);
   });
@@ -642,8 +650,8 @@ function openDayEditor(d){
     const tags=val('f-tags').split('\n').map(s=>s.trim()).filter(Boolean).map(line=>{const p=line.split('|');return{l:p[0].trim(),t:(p[1]||'culture').trim()};});
     const costs=val('f-costs').split('\n').map(s=>s.trim()).filter(Boolean).map(line=>{const p=line.split('=');const r=(p[1]||'0').split('|');return{item:p[0].trim(),amt:parseInt(r[0])||0,note:(r[1]||'').trim()};});
     const data={date:val('f-date'),title:val('f-title'),color:val('f-color'),wdate:val('f-wdate'),tags,itinerary:val('f-itin'),transport:val('f-trans'),food:val('f-food'),highlight:val('f-high'),costs};
-    if(isNew){const order=Math.max(0,...state.days.map(x=>x.order||0))+1;addDoc(collection(db,'itinerary'),{...data,order,done:false});}
-    else updateDoc(doc(db,'itinerary',d.id),data);
+    if(isNew){const order=Math.max(0,...state.days.map(x=>x.order||0))+1;addItem('itinerary',{...data,order,done:false});}
+    else updateItem('itinerary',d.id,data);
     closeModal();toast(isNew?'已新增 ✓':'已儲存 ✓');
   });
   setVal('f-date',d.date);setVal('f-color',d.color||'#c1432e');setVal('f-title',d.title);setVal('f-wdate',d.wdate);
@@ -666,8 +674,8 @@ function openShopEditor(s){
       let photoUrl=s.photoUrl||'';
       if(pendingPhotoFile){ photoUrl=await resizePhoto(pendingPhotoFile); }
       const data={name,note:val('s-note').trim(),bought:document.getElementById('s-bought').checked,photoUrl};
-      if(isNew){const order=Math.max(0,...state.shopping.map(x=>x.order||0))+1;await addDoc(collection(db,'shopping'),{...data,order});}
-      else await updateDoc(doc(db,'shopping',s.id),data);
+      if(isNew){const order=Math.max(0,...state.shopping.map(x=>x.order||0))+1;await addItem('shopping',{...data,order});}
+      else await updateItem('shopping',s.id,data);
       closeModal();toast(isNew?'已新增 ✓':'已儲存 ✓');
     }catch(e){alert('儲存失敗：'+e.message);document.getElementById('modal-save').textContent='儲存';}
   });
@@ -702,7 +710,7 @@ function toast(msg){toastEl.textContent=msg;toastEl.classList.add('show');clearT
 document.getElementById('add-day').addEventListener('click',()=>openDayEditor(null));
 document.getElementById('add-shop').addEventListener('click',()=>openShopEditor(null));
 document.getElementById('add-pack').addEventListener('click',()=>{
-  const t=prompt('新增項目：');if(t&&t.trim()){const order=Math.max(0,...state.packing.map(x=>x.order||0))+1;addDoc(collection(db,'packing'),{text:t.trim(),checked:false,order});}
+  const t=prompt('新增項目：');if(t&&t.trim()){const order=Math.max(0,...state.packing.map(x=>x.order||0))+1;addItem('packing',{text:t.trim(),checked:false,order});}
 });
 document.getElementById('edit-toggle').addEventListener('click',e=>{
   document.body.classList.toggle('editing');
