@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇯🇵 名古屋・高山・立山 9日行程</title>
+<style>
+/* ── CSS Variables / Theme ───────────────────────────────────────────── */
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1e2a3a;
+  --border: rgba(255,255,255,.09);
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --gold: #ffd93d;
+  --red: #e74c3c;
+  --blue: #4d96ff;
+  --green: #6bcb77;
+  --card-shadow: 0 4px 24px rgba(0,0,0,.4);
+}
+[data-theme="light"] {
+  --bg: #f0f2f5;
+  --bg2: #ffffff;
+  --bg3: #f7f9fc;
+  --border: rgba(0,0,0,.1);
+  --text: #1a1a2e;
+  --text2: #555;
+  --card-shadow: 0 4px 24px rgba(0,0,0,.1);
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  transition: background .3s, color .3s;
+}
+
+/* ── Progress bar ────────────────────────────────────────────────────── */
+#progress-bar {
+  position: fixed; top:0; left:0; height:3px; z-index:9999;
+  background: linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcb77,#4d96ff);
+  transition: width .1s; pointer-events:none;
+}
+
+/* ════════════════════════════════════════════════════════
+   HERO – Japanese Scene
+═══════════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  height: 100vh; min-height: 560px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; overflow: hidden;
+}
+
+/* layered background */
+.hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(175deg,
+    #04060f 0%,
+    #0a0c1e 30%,
+    #100818 60%,
+    #08101a 100%);
+}
+
+/* seigaiha (青海波) wave pattern */
+.hero-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(ellipse 36px 42px at 36px 0, transparent 30px, rgba(150,130,255,.055) 30px, rgba(150,130,255,.055) 34px, transparent 34px),
+    radial-gradient(ellipse 36px 42px at 0px 0,   transparent 30px, rgba(150,130,255,.055) 30px, rgba(150,130,255,.055) 34px, transparent 34px),
+    radial-gradient(ellipse 36px 42px at 72px 0,  transparent 30px, rgba(150,130,255,.055) 30px, rgba(150,130,255,.055) 34px, transparent 34px);
+  background-size: 72px 42px;
+  background-position: 0 0, 0 0, 0 0;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* ── Hero SVG scene (castle, torii, mountains, moon) ── */
+.hero-scene {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+/* ── Petals ── */
+.petal {
+  position: absolute; border-radius: 50% 0 50% 0;
+  background: radial-gradient(circle, #ffb7c5 55%, transparent 100%);
+  opacity: 0; animation: fall linear infinite; pointer-events: none; z-index: 3;
+}
+@keyframes fall {
+  0%   { transform: translateY(-30px) rotate(0deg);    opacity: 0; }
+  8%   { opacity: .8; }
+  92%  { opacity: .3; }
+  100% { transform: translateY(110vh) rotate(720deg);  opacity: 0; }
+}
+
+/* ── Japanese decorative kanji strip ── */
+.hero-kanji {
+  position: absolute; top: 0; right: 2rem;
+  writing-mode: vertical-rl; font-size: .7rem;
+  color: rgba(255,220,180,.18); letter-spacing: .4rem;
+  font-weight: 300; pointer-events: none; z-index: 2;
+  padding-top: 1.5rem;
+}
+
+/* ── Hero content ── */
+.hero-content {
+  position: relative; z-index: 4; padding: 1rem;
+}
+
+.hero-flag { font-size: 3.6rem; animation: pulse 2.5s ease-in-out infinite; display: block; margin-bottom: .5rem; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+
+.hero h1 {
+  font-size: clamp(1.7rem, 5.5vw, 3.6rem); font-weight: 900; letter-spacing: 3px;
+  background: linear-gradient(90deg, #ff8a80, #ffd740, #69f0ae, #80d8ff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-shadow: none;
+  margin-bottom: .3rem;
+}
+
+/* thin red line accent (rising-sun style) */
+.hero-line {
+  display: block; width: 60px; height: 2px;
+  background: #cc2200; margin: .6rem auto;
+  box-shadow: 0 0 8px #cc2200aa;
+}
+
+.hero-sub { font-size: .9rem; color: rgba(200,190,220,.65); letter-spacing: 4px; margin-bottom: 1rem; }
+
+.hero-dates {
+  display: inline-flex; gap: .9rem; flex-wrap: wrap; justify-content: center;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50px; padding: .55rem 1.4rem; font-size: .88rem; color: var(--gold);
+  backdrop-filter: blur(10px);
+}
+
+.countdown {
+  margin-top: 1rem;
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: rgba(200,40,40,.1); border: 1px solid rgba(200,40,40,.25);
+  border-radius: 10px; padding: .5rem 1.2rem; backdrop-filter: blur(8px);
+}
+.countdown-label { font-size: .72rem; color: rgba(255,180,180,.6); letter-spacing: 1px; }
+.countdown-value { font-size: 1rem; font-weight: 700; color: #ff8a80; }
+
+[data-theme="light"] .hero { background: #f5e8d0; }
+[data-theme="light"] .hero-bg { background: linear-gradient(175deg,#ede0cb,#f5e8d0,#ede0cb); }
+[data-theme="light"] .hero-bg::after { opacity: .4; }
+[data-theme="light"] .hero h1 { background: linear-gradient(90deg,#c0392b,#d35400,#27ae60,#2980b9); -webkit-background-clip:text; background-clip:text; }
+[data-theme="light"] .hero-sub { color: rgba(80,40,20,.5); }
+[data-theme="light"] .hero-dates { background:rgba(0,0,0,.06); border-color:rgba(0,0,0,.12); }
+[data-theme="light"] .countdown { background:rgba(200,40,40,.06); }
+
+.scroll-hint {
+  position: absolute; bottom: 1.8rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  color: rgba(200,190,220,.4); font-size: .75rem; animation: bounce 2s infinite;
+  cursor: pointer; z-index: 5;
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+/* ── Hotel strip ─────────────────────────────────────────────────────── */
+.hotel-strip {
+  display: flex; gap: 1rem; padding: 1.1rem 2rem; flex-wrap: wrap; justify-content: center;
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+}
+.hotel-card {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 12px;
+  padding: .7rem 1.2rem; display: flex; align-items: center; gap: .75rem;
+  transition: transform .2s, box-shadow .2s;
+}
+.hotel-card:hover { transform: translateY(-3px); box-shadow: var(--card-shadow); }
+.hotel-icon { font-size: 1.4rem; }
+.hotel-info .dates { font-size: .7rem; color: var(--gold); margin-bottom: .12rem; }
+.hotel-info .name  { font-size: .86rem; font-weight: 600; }
+
+/* ── Controls bar ────────────────────────────────────────────────────── */
+.controls-bar {
+  position: sticky; top: 0; z-index: 200;
+  display: flex; align-items: center; gap: .55rem; padding: .55rem 1.4rem;
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px); flex-wrap: wrap;
+}
+.ctrl-btn {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+  padding: .34rem .8rem; font-size: .76rem; font-weight: 600; color: var(--text);
+  cursor: pointer; transition: background .2s, transform .15s; white-space: nowrap;
+}
+.ctrl-btn:hover { background: rgba(255,255,255,.12); transform: translateY(-1px); }
+[data-theme="light"] .ctrl-btn:hover { background: rgba(0,0,0,.08); }
+.ctrl-btn.active { background: var(--gold); color: #1a1a2e; border-color: var(--gold); }
+.ctrl-sep { width: 1px; height: 20px; background: var(--border); margin: 0 .15rem; }
+
+/* ── Route Map ───────────────────────────────────────────────────────── */
+.map-section { max-width: 900px; margin: 2.5rem auto 0; padding: 0 1.5rem; }
+.map-wrap {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 18px;
+  overflow: hidden;
+}
+.map-title { font-size: .8rem; font-weight: 700; letter-spacing: 2px; color: var(--text2);
+  padding: .9rem 1.3rem .3rem; text-transform: uppercase; }
+#route-svg { width: 100%; height: auto; display: block; }
+
+/* ── Timeline ────────────────────────────────────────────────────────── */
+.timeline-section { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem 1rem; }
+.section-title {
+  text-align: center; font-size: 1.45rem; font-weight: 800; color: var(--gold);
+  margin-bottom: 1.8rem; letter-spacing: 2px;
+}
+.day-card {
+  position: relative; background: var(--bg2); border-radius: 18px; margin-bottom: 1rem;
+  border: 1px solid var(--border); overflow: hidden; transition: box-shadow .3s;
+}
+.day-card:hover { box-shadow: var(--card-shadow); }
+.day-card.done { opacity: .6; }
+.day-card.done .day-title { text-decoration: line-through; }
+.accent { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+.day-header {
+  display: flex; align-items: center; gap: .9rem; padding: 1rem 1.3rem;
+  cursor: pointer; user-select: none;
+}
+.day-num {
+  min-width: 48px; height: 48px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-weight: 900; font-size: .66rem; line-height: 1.2; flex-shrink: 0;
+}
+.day-num span { font-size: 1.1rem; }
+.day-meta { flex: 1; min-width: 0; }
+.day-date  { font-size: .73rem; color: var(--text2); margin-bottom: .08rem; }
+.day-title { font-size: .98rem; font-weight: 700; }
+.day-tags  { display: flex; gap: .32rem; flex-wrap: wrap; margin-top: .3rem; }
+.tag { font-size: .63rem; padding: .1rem .45rem; border-radius: 20px; font-weight: 700; letter-spacing: .4px; }
+.tag-transport { background:rgba(77,150,255,.15); color:#7dc4ff; border:1px solid rgba(77,150,255,.25); }
+.tag-food      { background:rgba(255,150,77,.15);  color:#ffba7d; border:1px solid rgba(255,150,77,.25); }
+.tag-highlight { background:rgba(255,80,80,.15);   color:#ff9090; border:1px solid rgba(255,80,80,.25); }
+.tag-nature    { background:rgba(77,200,130,.15);  color:#7dffc0; border:1px solid rgba(77,200,130,.25); }
+.tag-culture   { background:rgba(200,150,255,.15); color:#d8b4ff; border:1px solid rgba(200,150,255,.25); }
+.weather-badge {
+  display: flex; flex-direction: column; align-items: center; min-width: 50px;
+  text-align: center; flex-shrink: 0;
+}
+.weather-badge .w-icon { font-size: 1.35rem; line-height: 1; }
+.weather-badge .w-temp { font-size: .65rem; color: var(--text2); margin-top: .12rem; white-space: nowrap; }
+.chevron { font-size: 1rem; transition: transform .3s; color: var(--text2); margin-left: .4rem; flex-shrink: 0; }
+.day-card.open .chevron { transform: rotate(180deg); }
+.done-btn {
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border);
+  background: transparent; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: .82rem; transition: all .2s; flex-shrink: 0; color: var(--text2);
+}
+.done-btn:hover { border-color: var(--green); color: var(--green); }
+.day-card.done .done-btn { background: var(--green); border-color: var(--green); color: #fff; }
+.day-body { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(.4,0,.2,1); }
+.day-card.open .day-body { max-height: 900px; }
+.day-body-inner { padding: 0 1.3rem 1.3rem; display: grid; gap: .8rem; }
+.info-block {
+  background: var(--bg3); border-radius: 10px; padding: .8rem .95rem; border-left: 3px solid;
+}
+.info-block.itinerary { border-color: var(--blue); }
+.info-block.transport { border-color: var(--gold); }
+.info-block.food      { border-color: #ff6b6b; }
+.info-block.highlight { border-color: #ff9f43; }
+.info-block.costs     { border-color: var(--green); }
+.info-label { font-size: .66rem; font-weight: 700; letter-spacing: 1px; color: var(--text2); margin-bottom: .38rem; text-transform: uppercase; }
+.info-content { font-size: .88rem; line-height: 1.75; color: var(--text); }
+.info-content a { color: var(--blue); text-decoration: none; border-bottom: 1px dashed currentColor; transition: opacity .2s; }
+.info-content a:hover { opacity: .7; }
+.cost-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.cost-table td { padding: .28rem .35rem; border-bottom: 1px solid var(--border); }
+.cost-table td:last-child { text-align: right; font-weight: 600; }
+.cost-table tr:last-child td { border-bottom: none; font-weight: 700; color: var(--green); font-size: .85rem; }
+.cost-free { color: var(--text2); font-size: .72rem; }
+
+/* ── Fixed sidebar ───────────────────────────────────────────────────── */
+.sidebar-nav {
+  position: fixed; right: .8rem; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: .3rem; z-index: 300;
+}
+.sidebar-nav a {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text2); text-decoration: none; font-size: .7rem; font-weight: 700;
+  transition: all .2s;
+}
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: var(--gold); color: #1a1a2e; border-color: var(--gold); transform: scale(1.12);
+}
+@media (max-width: 768px) { .sidebar-nav { display: none; } }
+
+/* ── FAB + progress ring ─────────────────────────────────────────────── */
+.fab-wrap {
+  position: fixed; bottom: 1.4rem; right: 1.4rem; z-index: 100;
+  display: flex; flex-direction: column; align-items: center; gap: .35rem;
+}
+.fab {
+  position: relative; width: 56px; height: 56px;
+  cursor: pointer; background: none; border: none; padding: 0;
+}
+.fab-inner {
+  position: absolute; inset: 6px;
+  background: linear-gradient(135deg, #8b0000, #cc2200);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: #fff; box-shadow: 0 4px 16px rgba(139,0,0,.55);
+  transition: transform .2s;
+}
+.fab:hover .fab-inner { transform: scale(1.08); }
+.fab svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.fab-ring-bg { fill: none; stroke: rgba(255,255,255,.1); stroke-width: 3; }
+.fab-ring    { fill: none; stroke: var(--green); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset .5s; }
+.fab-count   { font-size: .6rem; color: var(--text2); text-align: center; }
+
+/* ── Checklist ───────────────────────────────────────────────────────── */
+.checklist-section { max-width: 900px; margin: 0 auto 4rem; padding: 0 1.5rem; }
+.checklist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: .65rem; }
+.check-item {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: .62rem .88rem; display: flex; align-items: center; gap: .6rem;
+  cursor: pointer; transition: background .2s;
+}
+.check-item:hover { background: rgba(255,255,255,.05); }
+[data-theme="light"] .check-item:hover { background: rgba(0,0,0,.04); }
+.check-item.checked { background: rgba(107,203,119,.08); border-color: rgba(107,203,119,.3); }
+.check-item.checked .check-text { text-decoration: line-through; opacity: .45; }
+.check-box {
+  width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all .2s; font-size: .8rem;
+}
+.check-item.checked .check-box { background: var(--green); border-color: var(--green); color: #fff; }
+.check-text { font-size: .83rem; }
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+footer { text-align: center; padding: 2rem; color: var(--text2); font-size: .76rem; }
+
+/* ── Print ───────────────────────────────────────────────────────────── */
+@media print {
+  .controls-bar, .sidebar-nav, .fab-wrap, .scroll-hint,
+  #progress-bar, .petal, .map-section, .hero-scene,
+  .hero-bg, .hero-kanji { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .hero { height: auto; min-height: auto; padding: 2rem 0; page-break-after: always;
+    background: #fff !important; }
+  .hero h1 { -webkit-text-fill-color: #000 !important; color: #000 !important; }
+  .hero-dates { border: 1px solid #ccc !important; color: #333 !important; }
+  .countdown { border: 1px solid #ccc !important; }
+  .hotel-strip, .day-card, .info-block, .check-item {
+    background: #fff !important; border: 1px solid #ddd !important;
+    box-shadow: none !important; break-inside: avoid;
+  }
+  .day-body { max-height: none !important; }
+  .day-card { page-break-inside: avoid; margin-bottom: 1rem; }
+  .accent { display: none; }
+  .tag { border: 1px solid #ccc; color: #333; background: #f5f5f5; }
+  .info-content a { color: #0066cc; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+
+  <!-- Japanese scene SVG -->
+  <svg class="hero-scene" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- seigaiha / 青海波 pattern -->
+      <pattern id="seigaiha" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
+        <circle cx="30" cy="52" r="28" fill="none" stroke="rgba(180,160,255,0.07)" stroke-width="1.2"/>
+        <circle cx="0"  cy="52" r="28" fill="none" stroke="rgba(180,160,255,0.07)" stroke-width="1.2"/>
+        <circle cx="60" cy="52" r="28" fill="none" stroke="rgba(180,160,255,0.07)" stroke-width="1.2"/>
+        <circle cx="30" cy="26" r="28" fill="none" stroke="rgba(180,160,255,0.05)" stroke-width="1"/>
+      </pattern>
+      <!-- radial glow for moon -->
+      <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#cc4400" stop-opacity="0.18"/>
+        <stop offset="60%"  stop-color="#990000" stop-opacity="0.08"/>
+        <stop offset="100%" stop-color="#660000" stop-opacity="0"/>
+      </radialGradient>
+      <!-- castle gradient -->
+      <linearGradient id="castleGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="#1a0a2e"/>
+        <stop offset="100%" stop-color="#06080f"/>
+      </linearGradient>
+      <!-- mountain gradient -->
+      <linearGradient id="mtnBack" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#12103a" stop-opacity=".7"/>
+        <stop offset="100%" stop-color="#080c20" stop-opacity=".9"/>
+      </linearGradient>
+      <linearGradient id="mtnFront" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0c0a22" stop-opacity=".85"/>
+        <stop offset="100%" stop-color="#060810" stop-opacity="1"/>
+      </linearGradient>
+    </defs>
+
+    <!-- seigaiha pattern background -->
+    <rect width="1000" height="600" fill="url(#seigaiha)"/>
+
+    <!-- Rising moon / sun (right) -->
+    <circle cx="820" cy="155" r="130" fill="url(#moonGlow)"/>
+    <circle cx="820" cy="155" r="72"  fill="#8b1a00" opacity=".13"/>
+    <circle cx="820" cy="155" r="60"  fill="#cc2200" opacity=".10"/>
+    <circle cx="820" cy="155" r="48"  fill="#dd3300" opacity=".09"/>
+
+    <!-- Horizontal decorative lines (Japanese style) -->
+    <line x1="0" y1="290" x2="1000" y2="290" stroke="rgba(200,160,255,.04)" stroke-width="1"/>
+    <line x1="0" y1="295" x2="1000" y2="295" stroke="rgba(200,160,255,.03)" stroke-width=".5"/>
+
+    <!-- Back mountain range (Alps silhouette) -->
+    <path d="M0 600 L0 350 L70 260 L130 310 L220 185 L310 265 L390 150 L460 230
+             L530 105 L600 195 L660 140 L730 200 L790 120 L870 190 L950 130 L1000 170
+             L1000 600 Z"
+      fill="url(#mtnBack)"/>
+
+    <!-- Snow caps on back mountains -->
+    <path d="M530 105 L515 140 L545 140 Z M390 150 L373 185 L407 185 Z
+             M660 140 L645 168 L675 168 Z M790 120 L775 152 L805 152 Z"
+      fill="rgba(240,240,255,.18)"/>
+
+    <!-- Mid mountain range -->
+    <path d="M0 600 L0 420 L100 340 L180 390 L290 300 L380 360 L490 275
+             L600 340 L700 285 L800 340 L900 295 L1000 330 L1000 600 Z"
+      fill="url(#mtnFront)"/>
+
+    <!-- ═══ TORII GATE (left side) ═══ -->
+    <g transform="translate(108, 598)" opacity="0.22">
+      <!-- Left pillar -->
+      <rect x="0"   y="-260" width="16" height="270" fill="#9b1a00" rx="2"/>
+      <!-- Right pillar -->
+      <rect x="148" y="-260" width="16" height="270" fill="#9b1a00" rx="2"/>
+      <!-- Kasagi (top curved beam) -->
+      <path d="M-28 -258 C-28 -282 0 -290 82 -290 C164 -290 192 -282 192 -258
+               L192 -244 C192 -244 164 -252 82 -252 C0 -252 -28 -244 -28 -244 Z"
+        fill="#9b1a00"/>
+      <!-- Upswept tips -->
+      <path d="M-28 -258 C-42 -268 -44 -280 -36 -288" fill="none" stroke="#9b1a00" stroke-width="10" stroke-linecap="round"/>
+      <path d="M192 -258 C206 -268 208 -280 200 -288" fill="none" stroke="#9b1a00" stroke-width="10" stroke-linecap="round"/>
+      <!-- Shimagi (thin top crossbar) -->
+      <rect x="-5"  y="-228" width="174" height="10" fill="#9b1a00" rx="2"/>
+      <!-- Nuki (main crossbar) -->
+      <rect x="-10" y="-195" width="184" height="16" fill="#9b1a00" rx="3"/>
+    </g>
+
+    <!-- ═══ NAGOYA CASTLE (center-right silhouette) ═══ -->
+    <g transform="translate(640, 598)" fill="url(#castleGrad)" opacity="0.92">
+      <!-- Ishigaki (stone base) -->
+      <path d="M-110 0 L110 0 L98 -28 L-98 -28 Z"/>
+      <!-- 1st floor body -->
+      <rect x="-88" y="-76" width="176" height="48"/>
+      <!-- 1st roof (nokisori – curved ends) -->
+      <path d="M-108 -76 C-90 -102 -42 -108 0 -108 C42 -108 90 -102 108 -76 Z"/>
+      <!-- 1st roof corner upswept tips -->
+      <path d="M-108 -76 C-122 -90 -118 -104 -108 -110" fill="none" stroke="url(#castleGrad)" stroke-width="6"/>
+      <path d="M 108 -76 C 122 -90 118 -104 108 -110" fill="none" stroke="url(#castleGrad)" stroke-width="6"/>
+      <!-- 2nd floor body -->
+      <rect x="-66" y="-150" width="132" height="42"/>
+      <!-- 2nd roof -->
+      <path d="M-82 -150 C-68 -174 -32 -180 0 -180 C32 -180 68 -174 82 -150 Z"/>
+      <!-- 2nd roof tips -->
+      <path d="M-82 -150 C-96 -162 -92 -175 -82 -180" fill="none" stroke="url(#castleGrad)" stroke-width="5"/>
+      <path d="M 82 -150 C 96 -162 92 -175 82 -180" fill="none" stroke="url(#castleGrad)" stroke-width="5"/>
+      <!-- 3rd floor body -->
+      <rect x="-45" y="-224" width="90" height="44"/>
+      <!-- 3rd roof -->
+      <path d="M-58 -224 C-48 -246 -24 -252 0 -252 C24 -252 48 -246 58 -224 Z"/>
+      <!-- 3rd roof tips -->
+      <path d="M-58 -224 C-70 -234 -67 -246 -58 -252" fill="none" stroke="url(#castleGrad)" stroke-width="4"/>
+      <path d="M 58 -224 C 70 -234 67 -246 58 -252" fill="none" stroke="url(#castleGrad)" stroke-width="4"/>
+      <!-- Top tower (天守) -->
+      <rect x="-24" y="-290" width="48" height="38"/>
+      <!-- Top roof -->
+      <path d="M-34 -290 C-28 -310 -14 -316 0 -316 C14 -316 28 -310 34 -290 Z"/>
+      <!-- Final pointed spire -->
+      <path d="M-8 -316 L0 -338 L8 -316 Z"/>
+      <!-- Shachi (金鯱 golden killer whale decorations) -->
+      <g fill="#D4AF37" opacity="0.85">
+        <!-- Left shachi -->
+        <path d="M-8 -338 C-16 -350 -14 -362 -9 -356 C-5 -350 -7 -340 -8 -338 Z"/>
+        <ellipse cx="-10" cy="-348" rx="3" ry="5" transform="rotate(-20,-10,-348)"/>
+        <!-- Right shachi -->
+        <path d="M8 -338 C16 -350 14 -362 9 -356 C5 -350 7 -340 8 -338 Z"/>
+        <ellipse cx="10" cy="-348" rx="3" ry="5" transform="rotate(20,10,-348)"/>
+      </g>
+      <!-- Windows / details on floors -->
+      <rect x="-8" y="-148" width="16" height="18" rx="2" fill="#060810" opacity=".6"/>
+      <rect x="-8" y="-222" width="16" height="16" rx="2" fill="#060810" opacity=".6"/>
+    </g>
+
+    <!-- Ground fog / mist at bottom -->
+    <path d="M0 560 Q250 530 500 545 Q750 558 1000 535 L1000 600 L0 600 Z"
+      fill="#060810" opacity=".7"/>
+    <path d="M0 580 Q300 565 600 572 Q800 576 1000 568 L1000 600 L0 600 Z"
+      fill="#04060e" opacity=".85"/>
+
+    <!-- Lantern glow (decorative, near castle) -->
+    <circle cx="540" cy="515" r="18" fill="#cc4400" opacity=".08"/>
+    <circle cx="540" cy="515" r="8"  fill="#ff6600" opacity=".10"/>
+    <circle cx="740" cy="525" r="14" fill="#cc4400" opacity=".06"/>
+    <circle cx="740" cy="525" r="6"  fill="#ff6600" opacity=".08"/>
+  </svg>
+
+  <!-- Kanji vertical decoration -->
+  <div class="hero-kanji">名古屋　高山　立山黑部　上高地　白川鄉</div>
+
+  <!-- Hero content -->
+  <div class="hero-content">
+    <span class="hero-flag">🇯🇵</span>
+    <h1>名古屋 · 高山 · 立山黑部</h1>
+    <span class="hero-line"></span>
+    <div class="hero-sub">JAPAN TRAVEL · 9 DAYS · 2026</div>
+    <div class="hero-dates">
+      <span>📅 6/13 出發</span>
+      <span>✈️ 6/21 返台</span>
+      <span>🏨 2 飯店</span>
+      <span>🗺️ 9 日程</span>
+    </div>
+    <div class="countdown">
+      <span class="countdown-label">⏱ 出發倒數</span>
+      <span class="countdown-value" id="countdown-val">計算中…</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint" onclick="document.getElementById('hotels').scrollIntoView({behavior:'smooth'})">
+    <span>向下捲動</span><span style="font-size:1.2rem">⌄</span>
+  </div>
+</section>
+
+<!-- ══ HOTEL STRIP ════════════════════════════════════════════════════════ -->
+<div class="hotel-strip" id="hotels">
+  <div class="hotel-card">
+    <div class="hotel-icon">🏯</div>
+    <div class="hotel-info">
+      <div class="dates">6/13 — 6/16 ｜ 3 晚</div>
+      <div class="name">高山站周邊飯店</div>
+    </div>
+  </div>
+  <div class="hotel-card">
+    <div class="hotel-icon">🏙️</div>
+    <div class="hotel-info">
+      <div class="dates">6/16 — 6/21 ｜ 5 晚</div>
+      <div class="name">TIC HOTEL Hisayaodorisakae（丸之內）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONTROLS ═══════════════════════════════════════════════════════════ -->
+<div class="controls-bar" id="ctrl-bar">
+  <button class="ctrl-btn" id="expand-all">＋ 全部展開</button>
+  <button class="ctrl-btn" id="collapse-all">－ 全部收合</button>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn" id="theme-toggle">🌙 深色模式</button>
+  <div class="ctrl-sep"></div>
+  <button class="ctrl-btn" onclick="window.print()">🖨️ 列印 / PDF</button>
+</div>
+
+<!-- ══ ROUTE MAP ══════════════════════════════════════════════════════════ -->
+<div class="map-section">
+  <div class="map-wrap">
+    <div class="map-title">🗾 行程路線圖</div>
+    <svg id="route-svg" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="mapbg" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#1a2744"/>
+          <stop offset="100%" stop-color="#0d1420"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#ffd93d" opacity=".7"/>
+        </marker>
+      </defs>
+      <rect width="500" height="280" fill="url(#mapbg)"/>
+      <g stroke="rgba(255,255,255,.04)" stroke-width="1">
+        <line x1="0" y1="70" x2="500" y2="70"/><line x1="0" y1="140" x2="500" y2="140"/>
+        <line x1="0" y1="210" x2="500" y2="210"/><line x1="125" y1="0" x2="125" y2="280"/>
+        <line x1="250" y1="0" x2="250" y2="280"/><line x1="375" y1="0" x2="375" y2="280"/>
+      </g>
+      <!-- Flight Taiwan→Nagoya -->
+      <path id="r0" d="M40,260 C80,200 100,180 155,200" fill="none" stroke="#ffd93d" stroke-width="1.5" stroke-dasharray="6,4" opacity=".6" marker-end="url(#arr)"/>
+      <!-- Nagoya→Takayama -->
+      <path id="r1" d="M155,200 C160,170 170,145 195,130" fill="none" stroke="#4d96ff" stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200" opacity=".9" marker-end="url(#arr)"/>
+      <!-- Takayama→Shinhotaka -->
+      <path id="r2" d="M195,130 C210,110 230,105 248,100" fill="none" stroke="#6bcb77" stroke-width="1.8" stroke-dasharray="80" stroke-dashoffset="80" opacity=".9" marker-end="url(#arr)"/>
+      <path d="M248,100 C230,110 210,120 195,130" fill="none" stroke="#6bcb77" stroke-width="1" stroke-dasharray="4,3" opacity=".35"/>
+      <!-- Takayama→Kamikochi -->
+      <path id="r3" d="M195,130 C220,115 240,110 258,112" fill="none" stroke="#6bcb77" stroke-width="1.8" stroke-dasharray="80" stroke-dashoffset="80" opacity=".9" marker-end="url(#arr)"/>
+      <path d="M258,112 C238,118 215,125 195,130" fill="none" stroke="#6bcb77" stroke-width="1" stroke-dasharray="4,3" opacity=".35"/>
+      <!-- Takayama→Shirakawa→Nagoya -->
+      <path id="r4" d="M195,130 C180,148 165,165 155,200" fill="none" stroke="#e74c3c" stroke-width="2" stroke-dasharray="120" stroke-dashoffset="120" opacity=".9" marker-end="url(#arr)"/>
+      <!-- Nagoya→Tateyama/Murodo -->
+      <path id="r5" d="M155,200 C180,140 240,85 275,65" fill="none" stroke="#4d96ff" stroke-width="2" stroke-dasharray="220" stroke-dashoffset="220" opacity=".9" marker-end="url(#arr)"/>
+      <path d="M275,65 C250,90 200,145 155,200" fill="none" stroke="#4d96ff" stroke-width="1" stroke-dasharray="5,4" opacity=".35"/>
+      <!-- Nagoya→Magome/Tsumago -->
+      <path id="r7" d="M155,200 C185,210 215,215 240,218" fill="none" stroke="#e67e22" stroke-width="1.8" stroke-dasharray="100" stroke-dashoffset="100" opacity=".9" marker-end="url(#arr)"/>
+      <path d="M240,218 C215,215 185,210 155,200" fill="none" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3" opacity=".35"/>
+      <!-- Nagoya→Tokoname→Airport→Taiwan -->
+      <path id="r9" d="M155,200 C140,218 120,235 80,252 C60,258 45,262 40,260" fill="none" stroke="#ffd93d" stroke-width="1.5" stroke-dasharray="6,4" opacity=".6" marker-end="url(#arr)"/>
+      <!-- City dots -->
+      <circle cx="155" cy="200" r="9"   fill="#e74c3c" opacity=".85" filter="url(#glow)"/><circle cx="155" cy="200" r="4"   fill="#fff"/>
+      <text x="163" y="204" fill="#e74c3c" font-size="9" font-weight="bold">名古屋</text>
+      <circle cx="195" cy="130" r="8"   fill="#4d96ff" opacity=".85" filter="url(#glow)"/><circle cx="195" cy="130" r="3.5" fill="#fff"/>
+      <text x="204" y="134" fill="#4d96ff" font-size="9" font-weight="bold">高山</text>
+      <circle cx="248" cy="100" r="6"   fill="#6bcb77" opacity=".8"  filter="url(#glow)"/><circle cx="248" cy="100" r="2.5" fill="#fff"/>
+      <text x="256" y="99"  fill="#6bcb77" font-size="8">新穗高</text>
+      <circle cx="258" cy="112" r="6"   fill="#6bcb77" opacity=".8"  filter="url(#glow)"/><circle cx="258" cy="112" r="2.5" fill="#fff"/>
+      <text x="266" y="117" fill="#6bcb77" font-size="8">上高地</text>
+      <circle cx="172" cy="163" r="6"   fill="#d8b4ff" opacity=".8"  filter="url(#glow)"/><circle cx="172" cy="163" r="2.5" fill="#fff"/>
+      <text x="180" y="163" fill="#d8b4ff" font-size="8">白川鄉</text>
+      <circle cx="275" cy="65"  r="7"   fill="#ffd93d" opacity=".85" filter="url(#glow)"/><circle cx="275" cy="65"  r="3"   fill="#fff"/>
+      <text x="283" y="69"  fill="#ffd93d" font-size="8" font-weight="bold">室堂</text>
+      <circle cx="240" cy="218" r="6"   fill="#ff9f43" opacity=".8"  filter="url(#glow)"/><circle cx="240" cy="218" r="2.5" fill="#fff"/>
+      <text x="248" y="222" fill="#ff9f43" font-size="8">馬籠・妻籠</text>
+      <circle cx="118" cy="242" r="6"   fill="#aaa"    opacity=".75" filter="url(#glow)"/><circle cx="118" cy="242" r="2.5" fill="#fff"/>
+      <text x="126" y="246" fill="#ccc"    font-size="8">常滑・空港</text>
+      <text x="20"  y="258" fill="#ffd93d" font-size="10">🇹🇼</text>
+      <text x="14"  y="270" fill="#aaa"    font-size="7">台北</text>
+      <!-- Day labels -->
+      <text x="88"  y="172" fill="#ffd93d" font-size="7" opacity=".7">D1</text>
+      <text x="162" y="158" fill="#ff6b6b" font-size="7" opacity=".7">D4</text>
+      <text x="213" y="105" fill="#6bcb77" font-size="7" opacity=".7">D2</text>
+      <text x="224" y="115" fill="#6bcb77" font-size="7" opacity=".7">D3</text>
+      <text x="208" y="138" fill="#4d96ff" font-size="7" opacity=".7">D5</text>
+      <text x="196" y="216" fill="#ff9f43" font-size="7" opacity=".7">D7</text>
+      <!-- Legend -->
+      <rect x="8" y="8" width="130" height="50" rx="5" fill="rgba(0,0,0,.4)"/>
+      <circle cx="20" cy="22" r="4" fill="#4d96ff"/>
+      <text x="28" y="26" fill="#ccc" font-size="8">JR 特急 / 地鐵</text>
+      <circle cx="20" cy="36" r="4" fill="#6bcb77"/>
+      <text x="28" y="40" fill="#ccc" font-size="8">濃飛巴士</text>
+      <line x1="15" y1="50" x2="25" y2="50" stroke="#ffd93d" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <text x="28" y="54" fill="#ccc" font-size="8">航班</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ══ TIMELINE ═══════════════════════════════════════════════════════════ -->
+<section class="timeline-section" id="itinerary">
+  <div class="section-title">📅 每日行程</div>
+</section>
+
+<!-- ══ CHECKLIST ══════════════════════════════════════════════════════════ -->
+<section class="checklist-section" id="checklist">
+  <div class="section-title">🎒 行前確認清單</div>
+  <div class="checklist-grid" id="checklist-grid"></div>
+</section>
+
+<footer>製作於 2026 · 旅遊愉快 🌸 · <a href="#top" style="color:var(--text2)">回頂部</a></footer>
+
+<nav class="sidebar-nav" id="sidebar-nav"></nav>
+
+<div class="fab-wrap">
+  <button class="fab" id="fab-btn" title="回到頂部" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 56 56">
+      <circle class="fab-ring-bg" cx="28" cy="28" r="24"/>
+      <circle class="fab-ring" id="fab-ring" cx="28" cy="28" r="24"
+        stroke-dasharray="150.8" stroke-dashoffset="150.8"/>
+    </svg>
+    <div class="fab-inner">↑</div>
+  </button>
+  <div class="fab-count" id="fab-count">0/9</div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════════════
+const TRIP_START = new Date('2026-06-13T00:00:00+09:00');
+const TRIP_END   = new Date('2026-06-21T23:59:59+09:00');
+
+const days = [
+  {
+    day:1, date:'6/13 (六)', title:'台北 ➔ 名古屋 ➔ 高山',
+    color:'#e74c3c',
+    tags:[{l:'交通日',t:'transport'},{l:'飛驒牛',t:'food'}],
+    itinerary:'12:55 抵達 <a href="https://www.google.com/maps/search/?api=1&query=中部国際空港" target="_blank">中部國際機場</a> ➔ 前往 <a href="https://www.google.com/maps/search/?api=1&query=名古屋駅" target="_blank">名古屋站</a>（開立 5 日周遊券、劃指定席）➔ 傍晚搭特急 Hida 抵達 <a href="https://www.google.com/maps/search/?api=1&query=高山駅" target="_blank">高山站</a>，入住飯店。',
+    transport:'名鐵 μ-SKY 特急（機場 → 名古屋）+ JR 特急 Hida（名古屋 → 高山，周遊券）',
+    food:'<a href="https://www.google.com/maps/search/?api=1&query=味蔵天国+高山" target="_blank">味藏天國</a> 或 <a href="https://www.google.com/maps/search/?api=1&query=丸明+高山" target="_blank">丸明</a>（飛驒牛燒肉）',
+    costs:[{item:'名鐵 μ-SKY 特急',amt:870},{item:'JR 特急 Hida（周遊券）',amt:0,note:'周遊券'},{item:'晚餐（飛驒牛）',amt:3500}]
+  },
+  {
+    day:2, date:'6/14 (日)', title:'新穗高雙層纜車【維修前最後開放日】',
+    color:'#e67e22',
+    tags:[{l:'維修前最後一天',t:'highlight'},{l:'阿爾卑斯展望',t:'nature'}],
+    itinerary:'早上搭巴士直達 <a href="https://www.google.com/maps/search/?api=1&query=新穂高ロープウェイ" target="_blank">新穗高纜車站</a> ➔ 10:30–13:30 挑戰日本唯一雙層纜車，登上 <a href="https://www.google.com/maps/search/?api=1&query=西穂高口展望台" target="_blank">西穗高口展望台</a>（海拔 2,156m）➔ 下午返回 <a href="https://www.google.com/maps/search/?api=1&query=高山市三町" target="_blank">高山老街三町</a> 散策。',
+    transport:'濃飛巴士（高山 ↔ 新穗高，建議購買來回票 + 纜車套票）',
+    food:'山頂展望台餐廳或自備輕食',
+    highlight:'把握維修前最後開放日！飽覽北阿爾卑斯山脈壯麗雪景，天氣佳時可遠眺笠ヶ岳。',
+    costs:[{item:'濃飛巴士來回',amt:2800},{item:'新穗高纜車套票',amt:3300},{item:'餐食',amt:1500}]
+  },
+  {
+    day:3, date:'6/15 (一)', title:'上高地大自然深度健行',
+    color:'#27ae60',
+    tags:[{l:'健行',t:'nature'},{l:'岩魚炭烤',t:'food'}],
+    itinerary:'07:40 出發 ➔ <a href="https://www.google.com/maps/search/?api=1&query=大正池+上高地" target="_blank">大正池</a>下車（火山堰塞湖美景）➔ 健行：大正池 → <a href="https://www.google.com/maps/search/?api=1&query=田代池+上高地" target="_blank">田代池</a> → <a href="https://www.google.com/maps/search/?api=1&query=河童橋+上高地" target="_blank">河童橋</a> → <a href="https://www.google.com/maps/search/?api=1&query=明神池+上高地" target="_blank">明神池</a> ➔ 16:00 <a href="https://www.google.com/maps/search/?api=1&query=上高地バスターミナル" target="_blank">上高地總站</a>搭車返回高山。',
+    transport:'濃飛巴士（高山 → 平湯溫泉無縫轉乘 → 上高地）',
+    food:'明神池旁 <a href="https://www.google.com/maps/search/?api=1&query=嘉門次小屋" target="_blank">嘉門次小屋</a> 炭烤岩魚（現烤現吃）',
+    costs:[{item:'濃飛巴士（高山→上高地）',amt:2400},{item:'岩魚炭烤',amt:1200},{item:'其他餐食',amt:800}]
+  },
+  {
+    day:4, date:'6/16 (二)', title:'白川鄉合掌村 ➔ 移宿名古屋',
+    color:'#8e44ad',
+    tags:[{l:'世界遺產',t:'culture'},{l:'換宿日',t:'transport'}],
+    itinerary:'上午漫遊 <a href="https://www.google.com/maps/search/?api=1&query=白川郷合掌造り" target="_blank">白川鄉合掌村</a>（<a href="https://www.google.com/maps/search/?api=1&query=城山展望台+白川郷" target="_blank">城山展望台</a>全景、<a href="https://www.google.com/maps/search/?api=1&query=和田家+白川郷" target="_blank">和田家</a>合掌屋參觀）➔ 下午回高山取行李 ➔ JR 特急直達名古屋 ➔ 入住 <a href="https://www.google.com/maps/search/?api=1&query=TIC+HOTEL+Nagoya" target="_blank">TIC HOTEL Hisayaodorisakae</a>。',
+    transport:'濃飛巴士（需事先預約，高山↔白川郷）+ JR 特急 Hida（周遊券）+ 名古屋地鐵',
+    food:'白川鄉鮎魚料理或合掌村當地定食',
+    costs:[{item:'濃飛巴士（高山↔白川郷）',amt:4940},{item:'和田家入場費',amt:300},{item:'JR 特急 Hida（周遊券）',amt:0,note:'周遊券'},{item:'名古屋地鐵',amt:200},{item:'餐食',amt:2500}]
+  },
+  {
+    day:5, date:'6/17 (三)', title:'立山黑部室堂雪牆【周遊券最終日】',
+    color:'#2980b9',
+    tags:[{l:'雪之大谷',t:'highlight'},{l:'8 種交通',t:'transport'},{l:'周遊券最終日',t:'highlight'}],
+    itinerary:'07:00 名古屋出發 ➔ 松本/信濃大町端進立山黑部 ➔ <a href="https://www.google.com/maps/search/?api=1&query=黒部ダム" target="_blank">黑部水壩</a>（爬 220 階觀景台）➔ 13:25 抵達 <a href="https://www.google.com/maps/search/?api=1&query=室堂平" target="_blank">室堂</a>（<a href="https://www.google.com/maps/search/?api=1&query=雪の大谷" target="_blank">雪之大谷</a>散步 1.5h，雪牆高達 15–20m）➔ 沿原路折返 ➔ 21:51 返回名古屋。',
+    transport:'立山黑部阿爾卑斯山脈路線 8 種交通工具大滿貫（全程周遊券）',
+    highlight:'周遊券最終使用日！室堂平雪景加特殊大氣光學現象，黑部水壩壩頂免費開放。',
+    costs:[{item:'立山黑部全線（周遊券含蓋）',amt:0,note:'周遊券'},{item:'餐食（山上較貴）',amt:2500}]
+  },
+  {
+    day:6, date:'6/18 (四)', title:'名古屋城與大須潮流散策',
+    color:'#c0392b',
+    tags:[{l:'名城參觀',t:'culture'},{l:'大須商圈',t:'culture'},{l:'豬排飯',t:'food'}],
+    itinerary:'10:00 參觀 <a href="https://www.google.com/maps/search/?api=1&query=名古屋城" target="_blank">名古屋城</a>（本丸御殿金箔障壁畫）➔ 下午前往 <a href="https://www.google.com/maps/search/?api=1&query=大須観音" target="_blank">大須觀音</a>祈福 ➔ <a href="https://www.google.com/maps/search/?api=1&query=大須商店街" target="_blank">大須商店街</a>挖寶（Alice on Wednesday、古著、動漫周邊）。',
+    transport:'名古屋地鐵 + 巴士一日乘車券',
+    food:'<a href="https://www.google.com/maps/search/?api=1&query=李朝園+大須" target="_blank">大須李朝園</a>韓式燒肉 或 <a href="https://www.google.com/maps/search/?api=1&query=矢場とん" target="_blank">矢場豬排</a>（元祖味噌豬排）',
+    costs:[{item:'地鐵＋巴士一日券',amt:740},{item:'名古屋城門票',amt:500},{item:'晚餐',amt:2500}]
+  },
+  {
+    day:7, date:'6/19 (五)', title:'中山道江戶古鎮【KLOOK 一日遊】',
+    color:'#d35400',
+    tags:[{l:'KLOOK 接送',t:'transport'},{l:'江戶古道',t:'culture'},{l:'五平餅',t:'food'}],
+    itinerary:'早上 <a href="https://www.google.com/maps/search/?api=1&query=名古屋駅" target="_blank">名古屋站</a>集合搭乘 KLOOK 專車 ➔ 漫遊 <a href="https://www.google.com/maps/search/?api=1&query=馬籠宿" target="_blank">馬籠宿</a>（石板坡道，五平餅午餐）➔ 漫遊 <a href="https://www.google.com/maps/search/?api=1&query=妻籠宿" target="_blank">妻籠宿</a>（純樸江戶老街）➔ 傍晚專車送回名古屋站。',
+    transport:'KLOOK 觀光巴士全程接送（免自行排交通）',
+    food:'馬籠宿五平餅（芝麻醬刷烤年糕串）+ 妻籠宿栗子甜點',
+    highlight:'穿著好走的鞋！馬籠宿為上坡石板路，步行約 1.5 公里。',
+    costs:[{item:'KLOOK 一日遊（含接送）',amt:7000},{item:'點心餐食',amt:500}]
+  },
+  {
+    day:8, date:'6/20 (六)', title:'熱田神宮與榮商圈血拼',
+    color:'#16a085',
+    tags:[{l:'鰻魚飯三吃',t:'food'},{l:'百貨血拼',t:'culture'},{l:'週末優惠票',t:'transport'}],
+    itinerary:'10:00 參拜 <a href="https://www.google.com/maps/search/?api=1&query=熱田神宮" target="_blank">熱田神宮</a>（供奉草薙神劍，三大神宮之一）➔ 中午前往 <a href="https://www.google.com/maps/search/?api=1&query=栄+名古屋" target="_blank">榮商圈</a>（松坂屋、三越、LACHIC、<a href="https://www.google.com/maps/search/?api=1&query=オアシス21" target="_blank">Oasis 21</a>）展開最終購物。',
+    transport:'週末環保券 Donichi Eco Ticket（週六日限定，地鐵全線任搭，¥620）',
+    food:'<a href="https://www.google.com/maps/search/?api=1&query=あつた蓬莱軒" target="_blank">熱田蓬萊軒</a>鰻魚飯三吃（必勝策略：百貨一開門先去抽號碼牌，建議 11:00 前抵達！）',
+    costs:[{item:'Donichi Eco Ticket',amt:620},{item:'蓬萊軒鰻魚飯三吃',amt:4500},{item:'購物（依個人）',amt:0,note:'預算自訂'}]
+  },
+  {
+    day:9, date:'6/21 (日)', title:'常滑陶瓷小鎮 ➔ 機場返台',
+    color:'#7f8c8d',
+    tags:[{l:'常滑散步',t:'culture'},{l:'21:20 起飛',t:'transport'}],
+    itinerary:'10:00 退房，行李寄放 <a href="https://www.google.com/maps/search/?api=1&query=名古屋駅" target="_blank">名古屋站</a> ➔ 漫遊 <a href="https://www.google.com/maps/search/?api=1&query=常滑やきもの散歩道" target="_blank">常滑散步道</a>（<a href="https://www.google.com/maps/search/?api=1&query=招き猫+常滑" target="_blank">巨大招財貓</a>、陶磁器坡道）➔ AEON 最後採購 ➔ 17:35 抵達 <a href="https://www.google.com/maps/search/?api=1&query=中部国際空港セントレア" target="_blank">中部國際機場</a> ➔ 21:20 班機起飛返台。',
+    transport:'名鐵常滑線（名古屋 → 常滑，約 30 分鐘）',
+    food:'機場 <a href="https://www.google.com/maps/search/?api=1&query=えびせんべいの里+セントレア" target="_blank">蝦餅伴手禮</a> + 手羽先炸雞翅 + 候機廳蝦夷拉麵',
+    costs:[{item:'名鐵常滑線來回',amt:590},{item:'機場餐食',amt:2000},{item:'伴手禮（依個人）',amt:0,note:'預算自訂'}]
+  }
+];
+
+const checks = [
+  '✈️ 機票電子票','🛂 護照（有效 6 個月+）','🚃 5 日周遊券',
+  '🎟️ 新穗高纜車套票','🚌 白川鄉巴士預約','🎫 KLOOK 一日遊憑證',
+  '💳 MANACA / SUICA IC 卡','📱 日本 SIM / eSIM','💴 備用現金（日幣）',
+  '🏥 旅遊保險','👟 健行鞋（上高地用）','🧥 保暖外套（室堂雪地）',
+  '🌂 輕便雨具','🔌 插座轉換頭','📸 相機充電器','💊 常備藥物',
+  '🧴 防曬乳','🗺️ Google Maps 離線地圖',
+];
+
+// ════════════════════════════════════════════════════════════════
+// WEATHER (forecast API – trip is in the future)
+// ════════════════════════════════════════════════════════════════
+const WMO = {
+  0:['☀️','晴'], 1:['🌤️','大致晴'], 2:['⛅','多雲'], 3:['🌥️','陰'],
+  45:['🌫️','霧'], 48:['🌫️','霧'], 51:['🌦️','毛雨'], 53:['🌦️','小雨'],
+  55:['🌧️','細雨'], 61:['🌧️','小雨'], 63:['🌧️','中雨'], 65:['🌧️','大雨'],
+  71:['🌨️','小雪'], 73:['🌨️','中雪'], 75:['❄️','大雪'],
+  80:['🌦️','陣雨'], 81:['🌧️','陣雨'], 82:['⛈️','大陣雨'], 95:['⛈️','雷雨'],
+};
+const weatherData = {};
+
+async function fetchWeather(lat, lon, start, end) {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+      + `&start_date=${start}&end_date=${end}`
+      + `&daily=temperature_2m_max,temperature_2m_min,weathercode`
+      + `&timezone=Asia%2FTokyo&forecast_days=16`;
+    const j = await (await fetch(url)).json();
+    (j.daily?.time || []).forEach((d, i) => {
+      if (weatherData[d]) return;
+      const code = j.daily.weathercode[i];
+      const wmo  = WMO[code] || ['🌡️','—'];
+      weatherData[d] = {
+        icon: wmo[0], desc: wmo[1],
+        tmax: Math.round(j.daily.temperature_2m_max[i]),
+        tmin: Math.round(j.daily.temperature_2m_min[i]),
+      };
+    });
+    updateWeatherBadges();
+  } catch(e) { /* silent fail */ }
+}
+
+function updateWeatherBadges() {
+  document.querySelectorAll('.weather-badge').forEach(el => {
+    const w = weatherData[el.dataset.date];
+    if (!w) return;
+    el.querySelector('.w-icon').textContent = w.icon;
+    el.querySelector('.w-temp').textContent = `${w.tmax}°/${w.tmin}°`;
+    el.title = `${w.desc} · 高${w.tmax}° 低${w.tmin}°`;
+  });
+}
+
+// fetch by primary location per date range
+fetchWeather(36.146, 137.252, '2026-06-13', '2026-06-15'); // Takayama D1-3
+fetchWeather(36.257, 136.906, '2026-06-16', '2026-06-16'); // Shirakawa D4
+fetchWeather(36.583, 137.617, '2026-06-17', '2026-06-17'); // Tateyama D5
+fetchWeather(35.181, 136.907, '2026-06-18', '2026-06-21'); // Nagoya D6-9
+
+// ════════════════════════════════════════════════════════════════
+// PETALS
+// ════════════════════════════════════════════════════════════════
+const hero = document.querySelector('.hero');
+for (let i = 0; i < 32; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.style.cssText = `left:${Math.random()*100}vw;top:${Math.random()*-20}vh;`
+    + `animation-duration:${7+Math.random()*9}s;animation-delay:${Math.random()*10}s;`
+    + `width:${7+Math.random()*9}px;height:${7+Math.random()*9}px`;
+  hero.appendChild(p);
+}
+
+// ════════════════════════════════════════════════════════════════
+// COUNTDOWN
+// ════════════════════════════════════════════════════════════════
+function updateCountdown() {
+  const now = new Date();
+  const el  = document.getElementById('countdown-val');
+  if (now < TRIP_START) {
+    const diff = TRIP_START - now;
+    const d = Math.floor(diff/864e5), h = Math.floor(diff%864e5/36e5),
+          m = Math.floor(diff%36e5/6e4), s = Math.floor(diff%6e4/1e3);
+    el.textContent = `${d} 天 ${h} 時 ${m} 分 ${s} 秒`;
+    el.style.color = '#ff8a80';
+  } else if (now <= TRIP_END) {
+    el.textContent = `🎌 旅行第 ${Math.floor((now-TRIP_START)/864e5)+1} 天，玩得開心！`;
+    el.style.color = 'var(--green)';
+  } else {
+    el.textContent = `旅行圓滿結束 · 已回台 ${Math.floor((now-TRIP_END)/864e5)} 天 🌸`;
+    el.style.color = 'var(--text2)';
+  }
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ════════════════════════════════════════════════════════════════
+// SAVED STATE
+// ════════════════════════════════════════════════════════════════
+const saved = {
+  done:   JSON.parse(localStorage.getItem('jpn_done')   || '{}'),
+  checks: JSON.parse(localStorage.getItem('jpn_checks') || '{}'),
+};
+function saveState() {
+  localStorage.setItem('jpn_done',   JSON.stringify(saved.done));
+  localStorage.setItem('jpn_checks', JSON.stringify(saved.checks));
+}
+
+// ════════════════════════════════════════════════════════════════
+// RENDER DAYS
+// ════════════════════════════════════════════════════════════════
+const container  = document.querySelector('.timeline-section');
+const sidebar    = document.getElementById('sidebar-nav');
+const dateLookup = ['2026-06-13','2026-06-14','2026-06-15','2026-06-16','2026-06-17',
+                    '2026-06-18','2026-06-19','2026-06-20','2026-06-21'];
+
+days.forEach((d, idx) => {
+  const isDone = !!saved.done[idx];
+  let total = 0;
+  const costRows = d.costs.map(c => {
+    total += c.amt;
+    return `<tr><td>${c.item}</td><td>${c.amt===0
+      ? `<span class="cost-free">${c.note||'¥0'}</span>`
+      : '¥'+c.amt.toLocaleString()}</td></tr>`;
+  }).join('');
+
+  const tagHTML = d.tags.map(t => `<span class="tag tag-${t.t}">${t.l}</span>`).join('');
+
+  let body = `
+    <div class="info-block itinerary">
+      <div class="info-label">🗺️ 行程</div>
+      <div class="info-content">${d.itinerary}</div>
+    </div>
+    <div class="info-block transport">
+      <div class="info-label">🚃 交通</div>
+      <div class="info-content">${d.transport}</div>
+    </div>`;
+  if (d.food)      body += `<div class="info-block food"><div class="info-label">🍜 美食</div><div class="info-content">${d.food}</div></div>`;
+  if (d.highlight) body += `<div class="info-block highlight"><div class="info-label">⭐ 重點提示</div><div class="info-content">${d.highlight}</div></div>`;
+  body += `<div class="info-block costs"><div class="info-label">💴 預估花費</div>
+    <table class="cost-table">${costRows}
+      <tr><td>小計</td><td>¥${total.toLocaleString()}<span class="cost-free">（不含住宿）</span></td></tr>
+    </table></div>`;
+
+  const card = document.createElement('div');
+  card.className = 'day-card' + (isDone ? ' done' : '');
+  card.id = `day-${d.day}`;
+  card.innerHTML = `
+    <div class="accent" style="background:${d.color}"></div>
+    <div class="day-header">
+      <div class="day-num" style="background:${d.color}22;border:2px solid ${d.color}55;color:${d.color}">
+        <span>D${d.day}</span>
+      </div>
+      <div class="day-meta">
+        <div class="day-date">${d.date}</div>
+        <div class="day-title">${d.title}</div>
+        <div class="day-tags">${tagHTML}</div>
+      </div>
+      <div class="weather-badge" data-date="${dateLookup[idx]}" title="載入天氣中…">
+        <div class="w-icon">⏳</div><div class="w-temp">—</div>
+      </div>
+      <button class="done-btn" title="標記完成" data-idx="${idx}">${isDone?'✓':''}</button>
+      <div class="chevron">⌄</div>
+    </div>
+    <div class="day-body"><div class="day-body-inner">${body}</div></div>`;
+
+  card.querySelector('.day-header').addEventListener('click', e => {
+    if (e.target.closest('.done-btn')) return;
+    card.classList.toggle('open');
+  });
+  card.querySelector('.done-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    const on = !card.classList.contains('done');
+    card.classList.toggle('done', on);
+    e.currentTarget.textContent = on ? '✓' : '';
+    saved.done[idx] = on; saveState(); updateProgressRing();
+  });
+  container.appendChild(card);
+
+  const a = document.createElement('a');
+  a.href = `#day-${d.day}`; a.textContent = `D${d.day}`;
+  a.title = d.title; a.dataset.target = `day-${d.day}`;
+  a.style.borderColor = d.color + '55';
+  sidebar.appendChild(a);
+});
+
+// ════════════════════════════════════════════════════════════════
+// PROGRESS RING
+// ════════════════════════════════════════════════════════════════
+function updateProgressRing() {
+  const n = Object.values(saved.done).filter(Boolean).length;
+  const circ = 2 * Math.PI * 24;
+  document.getElementById('fab-ring').style.strokeDashoffset = circ * (1 - n/9);
+  document.getElementById('fab-count').textContent = `${n}/9`;
+}
+updateProgressRing();
+
+// ════════════════════════════════════════════════════════════════
+// CHECKLIST
+// ════════════════════════════════════════════════════════════════
+const grid = document.getElementById('checklist-grid');
+checks.forEach((item, i) => {
+  const el = document.createElement('div');
+  el.className = 'check-item' + (saved.checks[i] ? ' checked' : '');
+  el.innerHTML = `<div class="check-box">${saved.checks[i]?'✓':''}</div><span class="check-text">${item}</span>`;
+  el.addEventListener('click', () => {
+    el.classList.toggle('checked');
+    const on = el.classList.contains('checked');
+    el.querySelector('.check-box').textContent = on ? '✓' : '';
+    saved.checks[i] = on; saveState();
+  });
+  grid.appendChild(el);
+});
+
+// ════════════════════════════════════════════════════════════════
+// SCROLL PROGRESS + SIDEBAR HIGHLIGHT
+// ════════════════════════════════════════════════════════════════
+const bar = document.getElementById('progress-bar');
+const sideLinks = document.querySelectorAll('.sidebar-nav a');
+window.addEventListener('scroll', () => {
+  bar.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+  let active = null;
+  document.querySelectorAll('.day-card').forEach(c => {
+    if (c.getBoundingClientRect().top <= window.innerHeight * .45) active = c.id;
+  });
+  sideLinks.forEach(a => a.classList.toggle('active', a.dataset.target === active));
+}, { passive: true });
+
+// ════════════════════════════════════════════════════════════════
+// EXPAND / COLLAPSE ALL
+// ════════════════════════════════════════════════════════════════
+document.getElementById('expand-all').addEventListener('click', () =>
+  document.querySelectorAll('.day-card').forEach(c => c.classList.add('open')));
+document.getElementById('collapse-all').addEventListener('click', () =>
+  document.querySelectorAll('.day-card').forEach(c => c.classList.remove('open')));
+
+// ════════════════════════════════════════════════════════════════
+// DARK / LIGHT MODE
+// ════════════════════════════════════════════════════════════════
+const themeBtn = document.getElementById('theme-toggle');
+const t0 = localStorage.getItem('jpn_theme') || 'dark';
+document.documentElement.dataset.theme = t0;
+themeBtn.textContent = t0 === 'dark' ? '☀️ 淺色模式' : '🌙 深色模式';
+themeBtn.addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  themeBtn.textContent = next === 'dark' ? '☀️ 淺色模式' : '🌙 深色模式';
+  localStorage.setItem('jpn_theme', next);
+});
+
+// ════════════════════════════════════════════════════════════════
+// AUTO-OPEN TODAY'S CARD
+// ════════════════════════════════════════════════════════════════
+const diff = Math.floor((new Date().setHours(0,0,0,0) - new Date('2026-06-13').setHours(0,0,0,0)) / 864e5);
+if (diff >= 0 && diff < 9) {
+  const cards = document.querySelectorAll('.day-card');
+  cards[diff].classList.add('open');
+  setTimeout(() => cards[diff].scrollIntoView({ behavior:'smooth', block:'center' }), 400);
+}
+
+// ════════════════════════════════════════════════════════════════
+// ROUTE MAP ANIMATION
+// ════════════════════════════════════════════════════════════════
+const mapObs = new IntersectionObserver(entries => {
+  if (!entries[0].isIntersecting) return;
+  ['r1','r2','r3','r4','r5','r7'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const len = el.getTotalLength ? el.getTotalLength() : 200;
+    el.style.strokeDasharray = len;
+    el.style.strokeDashoffset = len;
+    setTimeout(() => {
+      el.style.transition = `stroke-dashoffset 1.2s ease ${i * 0.28}s`;
+      el.style.strokeDashoffset = '0';
+    }, 500);
+  });
+  mapObs.disconnect();
+}, { threshold: 0.3 });
+mapObs.observe(document.getElementById('route-svg'));
+</script>
+</body>
+</html>
