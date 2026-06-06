@@ -488,7 +488,6 @@ function renderDays(){
       <div class="info-block transport"><div class="info-label">🚃 交通</div><div class="info-content">${d.transport||''}</div></div>`;
     if(d.food) body+=`<div class="info-block food"><div class="info-label">🍜 美食</div><div class="info-content">${d.food}</div></div>`;
     if(d.highlight) body+=`<div class="info-block highlight"><div class="info-label">⭐ 重點提示 / 備註</div><div class="info-content">${d.highlight}</div></div>`;
-    if((d.costs||[]).length) body+=`<div class="info-block costs"><div class="info-label">💴 預估花費</div><table class="cost-table">${costs}<tr><td>小計</td><td>¥${total.toLocaleString()}<span class="cost-free">（不含住宿）</span></td></tr></table></div>`;
     const card=document.createElement('div');
     card.className='day-card'+(d.done?' done':''); card.id='day-'+(idx+1);
     card.innerHTML=`<div class="accent" style="background:${d.color}"></div>
