@@ -317,6 +317,59 @@ footer{position:relative;text-align:center;padding:3rem 2rem 2rem;color:var(--te
   <span class="sync-dot" id="sync-dot"><i></i><span id="sync-text">連線中…</span></span>
 </div>
 
+<!-- ══ 周遊券攻略 ══ -->
+<section class="section">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);overflow:hidden">
+    <div id="pass-head" style="display:flex;align-items:center;gap:.6rem;padding:1rem 1.3rem;cursor:pointer;user-select:none;border-left:5px solid var(--gold)">
+      <span style="font-size:1.3rem">🎫</span>
+      <div style="flex:1"><div style="font-weight:800;font-size:1rem;color:#9a5018">周遊券攻略（Alpine-Takayama-Matsumoto Pass）</div>
+        <div style="font-size:.72rem;color:var(--text2);margin-top:.1rem">哪些有 cover、名古屋站要做什麼 — 點開看重點</div></div>
+      <span id="pass-chev" style="font-size:1rem;color:var(--text2);transition:transform .3s">⌄</span>
+    </div>
+    <div id="pass-body" style="max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)">
+      <div style="padding:0 1.3rem 1.3rem;display:grid;gap:.8rem">
+
+        <div class="info-block" style="border-color:var(--green)">
+          <div class="info-label">✅ 周遊券有 cover（JR 部分・免加價可劃指定席）</div>
+          <div class="info-content">
+            • D1 6/13　名古屋 → 高山（特急 Hida）<br>
+            • D4 6/16　高山 → 名古屋（特急 Hida）<br>
+            • D5 6/17　名古屋 ⇄ 松本 ⇄ 信濃大町（特急 Shinano＋大糸線）<br>
+            • D5 6/17　立山黑部阿爾卑斯路線 8 種交通工具（車資 cover，須另約時段）
+          </div>
+        </div>
+
+        <div class="info-block" style="border-color:var(--red)">
+          <div class="info-label">❌ 不 cover（要自費）</div>
+          <div class="info-content">
+            • D1 名鐵 μ-SKY（機場→名古屋）¥1,340<br>
+            • D2 濃飛巴士＋新穗高纜車　• D3 濃飛巴士（上高地）<br>
+            • D4 濃飛巴士（白川鄉，需預約）<br>
+            • D4/D6/D8 名古屋地鐵・巴士一日券・Donichi 券<br>
+            • D7 KLOOK 一日遊　• D9 名鐵常滑線
+          </div>
+        </div>
+
+        <div class="info-block" style="border-color:var(--indigo)">
+          <div class="info-label">🚉 D1 抵達名古屋站要做的事</div>
+          <div class="info-content">
+            <b>1. 開券：</b>到 JR 東海綠窗口，拿兌換券＋<b>護照</b>換正式 5 日券（機場沒 JR 站，必須在名古屋辦）。<br>
+            <b>2. 一次劃好所有指定席：</b>D1 名古屋→高山、D4 高山→名古屋、D5 名古屋⇄松本 去回 全部當場劃完最省事。
+          </div>
+        </div>
+
+        <div class="info-block" style="border-color:#d2691e">
+          <div class="info-label">⛰️ 立山黑部要先上網約時段（重要）</div>
+          <div class="info-content">
+            6/17 為雪牆旺季，立山纜車／室堂相關車輛<b>需指定搭乘時段</b>，這<b>不是在名古屋 JR 窗口辦</b>，要事先到官方「立山黑部アルペンルート」預約網站訂時段。周遊券只 cover 車資，沒約到旺季可能上不去。
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══ ITINERARY ══ -->
 <section class="section" id="itinerary">
   <div class="section-title">📅 每日行程</div>
@@ -711,6 +764,11 @@ window.addEventListener('scroll',()=>{
 let autoOpened=false;
 function autoOpenToday(){if(autoOpened)return;const diff=Math.floor((new Date().setHours(0,0,0,0)-new Date('2026-06-13').setHours(0,0,0,0))/864e5);
   if(diff>=0&&diff<state.days.length){const cards=document.querySelectorAll('.day-card');if(cards[diff]){autoOpened=true;cards[diff].classList.add('open');}}}
+
+// 周遊券攻略展開
+const passHead=document.getElementById('pass-head'),passBody=document.getElementById('pass-body'),passChev=document.getElementById('pass-chev');
+passHead.addEventListener('click',()=>{const open=passBody.style.maxHeight&&passBody.style.maxHeight!=='0px';
+  passBody.style.maxHeight=open?'0px':passBody.scrollHeight+'px';passChev.style.transform=open?'':'rotate(180deg)';});
 
 for(let i=0;i<30;i++){const p=document.createElement('div');p.className='petal';
   p.style.cssText=`left:${Math.random()*100}vw;top:${Math.random()*-20}vh;animation-duration:${7+Math.random()*9}s;animation-delay:${Math.random()*10}s;width:${7+Math.random()*9}px;height:${7+Math.random()*9}px`;
