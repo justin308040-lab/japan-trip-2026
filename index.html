@@ -487,8 +487,8 @@ function renderDays(){
     let body=`<div class="info-block itinerary"><div class="info-label">🗺️ 行程</div><div class="info-content">${d.itinerary||''}</div></div>
       <div class="info-block transport"><div class="info-label">🚃 交通</div><div class="info-content">${d.transport||''}</div></div>`;
     if(d.food) body+=`<div class="info-block food"><div class="info-label">🍜 美食</div><div class="info-content">${d.food}</div></div>`;
-    if(d.highlight) body+=`<div class="info-block highlight"><div class="info-label">⭐ 重點提示</div><div class="info-content">${d.highlight}</div></div>`;
-    body+=`<div class="info-block costs"><div class="info-label">💴 預估花費</div><table class="cost-table">${costs}<tr><td>小計</td><td>¥${total.toLocaleString()}<span class="cost-free">（不含住宿）</span></td></tr></table></div>`;
+    if(d.highlight) body+=`<div class="info-block highlight"><div class="info-label">⭐ 重點提示 / 備註</div><div class="info-content">${d.highlight}</div></div>`;
+    if((d.costs||[]).length) body+=`<div class="info-block costs"><div class="info-label">💴 預估花費</div><table class="cost-table">${costs}<tr><td>小計</td><td>¥${total.toLocaleString()}<span class="cost-free">（不含住宿）</span></td></tr></table></div>`;
     const card=document.createElement('div');
     card.className='day-card'+(d.done?' done':''); card.id='day-'+(idx+1);
     card.innerHTML=`<div class="accent" style="background:${d.color}"></div>
@@ -599,34 +599,31 @@ document.getElementById('modal-cancel').addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
 document.getElementById('modal-save').addEventListener('click',()=>{if(saveHandler)saveHandler();});
 
+function stripHtml(h){const t=document.createElement('div');t.innerHTML=h||'';return(t.textContent||'').trim();}
 function openDayEditor(d){
   const isNew=!d;
-  d=d||{date:'',title:'',color:'#c1432e',wdate:'',tags:[],itinerary:'',transport:'',food:'',highlight:'',costs:[]};
-  const tagsText=(d.tags||[]).map(t=>`${t.l}|${t.t}`).join('\n');
-  const costsText=(d.costs||[]).map(c=>`${c.item}=${c.amt||0}${c.note?'|'+c.note:''}`).join('\n');
-  openModal(isNew?'新增一天':'編輯行程',`
-    <div class="field-row"><div class="field"><label>日期</label><input id="f-date" placeholder="6/22 (一)"></div>
-      <div class="field"><label>主題色</label><input id="f-color" type="color"></div></div>
-    <div class="field"><label>標題</label><input id="f-title"></div>
-    <div class="field"><label>天氣日期</label><input id="f-wdate" type="date"></div>
-    <div class="field"><label>標籤（每行一個，格式：名稱|類型）</label><textarea id="f-tags" rows="3"></textarea>
-      <div class="hint">類型：transport / food / highlight / nature / culture</div></div>
-    <div class="field"><label>行程（可含連結 HTML）</label><textarea id="f-itin" rows="4"></textarea></div>
-    <div class="field"><label>交通</label><textarea id="f-trans" rows="2"></textarea></div>
+  const base=d||{date:'',title:'',color:'#c1432e',wdate:'',tags:[],itinerary:'',transport:'',food:'',highlight:'',costs:[]};
+  openModal(isNew?'新增一天':'編輯這一天',`
+    <div class="field"><label>標題</label><input id="f-title" placeholder="例：名古屋城一日遊"></div>
+    <div class="field-row">
+      <div class="field"><label>日期</label><input id="f-date" placeholder="6/22 (一)"></div>
+      <div class="field"><label>主題色</label><input id="f-color" type="color"></div>
+    </div>
+    <div class="field"><label>行程內容</label><textarea id="f-itin" rows="5" placeholder="直接打字描述這天的安排…"></textarea></div>
+    <div class="field"><label>交通</label><textarea id="f-trans" rows="2" placeholder="例：地鐵、巴士、特急…"></textarea></div>
     <div class="field"><label>美食（可留空）</label><textarea id="f-food" rows="2"></textarea></div>
-    <div class="field"><label>重點提示（可留空）</label><textarea id="f-high" rows="2"></textarea></div>
-    <div class="field"><label>預估花費（每行：項目=金額，免費可加 |備註）</label><textarea id="f-costs" rows="4"></textarea>
-      <div class="hint">例：晚餐=3500　或　JR=0|周遊券</div></div>
+    <div class="field"><label>備註 / 提醒（可留空）</label><textarea id="f-high" rows="2"></textarea></div>
   `,()=>{
-    const tags=val('f-tags').split('\n').map(s=>s.trim()).filter(Boolean).map(line=>{const p=line.split('|');return{l:p[0].trim(),t:(p[1]||'culture').trim()};});
-    const costs=val('f-costs').split('\n').map(s=>s.trim()).filter(Boolean).map(line=>{const p=line.split('=');const r=(p[1]||'0').split('|');return{item:p[0].trim(),amt:parseInt(r[0])||0,note:(r[1]||'').trim()};});
-    const data={date:val('f-date'),title:val('f-title'),color:val('f-color'),wdate:val('f-wdate'),tags,itinerary:val('f-itin'),transport:val('f-trans'),food:val('f-food'),highlight:val('f-high'),costs};
+    const data={date:val('f-date'),title:val('f-title'),color:val('f-color'),
+      itinerary:val('f-itin'),transport:val('f-trans'),food:val('f-food'),highlight:val('f-high'),
+      tags:base.tags||[],costs:base.costs||[],wdate:base.wdate||''};
     if(isNew){const order=Math.max(0,...state.days.map(x=>x.order||0))+1;addItem('itinerary',{...data,order,done:false});}
     else updateItem('itinerary',d.id,data);
     closeModal();toast(isNew?'已新增 ✓':'已儲存 ✓');
   });
-  setVal('f-date',d.date);setVal('f-color',d.color||'#c1432e');setVal('f-title',d.title);setVal('f-wdate',d.wdate);
-  setVal('f-tags',tagsText);setVal('f-itin',d.itinerary);setVal('f-trans',d.transport);setVal('f-food',d.food);setVal('f-high',d.highlight);setVal('f-costs',costsText);
+  setVal('f-title',base.title);setVal('f-date',base.date);setVal('f-color',base.color||'#c1432e');
+  setVal('f-itin',stripHtml(base.itinerary));setVal('f-trans',stripHtml(base.transport));
+  setVal('f-food',stripHtml(base.food));setVal('f-high',stripHtml(base.highlight));
 }
 
 let pendingPhotoFile=null;
