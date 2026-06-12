@@ -117,7 +117,8 @@ body{
 .tag-highlight{background:rgba(200,90,30,.12);color:#b8500f;border:1px solid rgba(200,90,30,.28)}
 .tag-nature{background:rgba(107,142,78,.13);color:#5a7a3e;border:1px solid rgba(107,142,78,.28)}
 .tag-culture{background:rgba(142,90,160,.12);color:#8e5aa0;border:1px solid rgba(142,90,160,.28)}
-.weather-badge{display:flex;flex-direction:column;align-items:center;min-width:48px;text-align:center;flex-shrink:0}
+.weather-badge{display:flex;flex-direction:column;align-items:center;min-width:48px;text-align:center;flex-shrink:0;cursor:pointer;border-radius:8px;padding:.15rem .2rem;transition:background .2s}
+.weather-badge:hover{background:var(--bg3)}
 .weather-badge .w-icon{font-size:1.3rem;line-height:1}
 .weather-badge .w-temp{font-size:.64rem;color:var(--text2);margin-top:.12rem;white-space:nowrap}
 .chevron{font-size:1rem;transition:transform .3s;color:var(--text2);margin-left:.3rem;flex-shrink:0}
@@ -564,6 +565,7 @@ function renderDays(){
       if(e.target.closest('.done-btn')||e.target.closest('.day-actions'))return;
       card.classList.toggle('open');
     });
+    card.querySelector('.weather-badge').addEventListener('click',e=>{e.stopPropagation();openHourly(e.currentTarget.dataset.wdate);});
     card.querySelector('.done-btn').addEventListener('click',e=>{e.stopPropagation();updateItem('itinerary',d.id,{done:!d.done});});
     card.querySelector('.edit').addEventListener('click',e=>{e.stopPropagation();openDayEditor(d);});
     card.querySelector('.del').addEventListener('click',e=>{e.stopPropagation();if(confirm(`確定刪除「${d.title}」？`))removeItem('itinerary',d.id);});
@@ -619,7 +621,7 @@ function renderShopping(){
 const WMO={0:['☀️','晴'],1:['🌤️','大致晴'],2:['⛅','多雲'],3:['🌥️','陰'],45:['🌫️','霧'],48:['🌫️','霧'],
   51:['🌦️','毛雨'],53:['🌦️','小雨'],55:['🌧️','細雨'],61:['🌧️','小雨'],63:['🌧️','中雨'],65:['🌧️','大雨'],
   71:['🌨️','小雪'],73:['🌨️','中雪'],75:['❄️','大雪'],80:['🌦️','陣雨'],81:['🌧️','陣雨'],82:['⛈️','大陣雨'],95:['⛈️','雷雨']};
-const weatherData={};
+const weatherData={}, hourlyData={};
 // 各地區座標 + 六月氣候概況（超過 16 天預報範圍時的後備值）
 const regions={
   takayama :{lat:36.146,lon:137.252,norm:{icon:'⛅',desc:'六月山區概況',tmax:24,tmin:14},dates:['2026-06-13','2026-06-14','2026-06-15']},
@@ -629,14 +631,16 @@ const regions={
 };
 async function loadWeather(){
   for(const k in regions){
-    const r=regions[k]; const fc={};
+    const r=regions[k]; const fc={}, hr={};
     try{
-      const url=`https://api.open-meteo.com/v1/forecast?latitude=${r.lat}&longitude=${r.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=Asia%2FTokyo&forecast_days=16`;
+      const url=`https://api.open-meteo.com/v1/forecast?latitude=${r.lat}&longitude=${r.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode&hourly=temperature_2m,precipitation_probability,weathercode&timezone=Asia%2FTokyo&forecast_days=16`;
       const j=await(await fetch(url)).json();
       (j.daily?.time||[]).forEach((d,i)=>{const w=WMO[j.daily.weathercode[i]]||['🌡️','—'];
         fc[d]={icon:w[0],desc:w[1],tmax:Math.round(j.daily.temperature_2m_max[i]),tmin:Math.round(j.daily.temperature_2m_min[i]),fore:true};});
+      (j.hourly?.time||[]).forEach((t,i)=>{const d=t.slice(0,10),h=+t.slice(11,13);
+        (hr[d]=hr[d]||[]).push({h,temp:Math.round(j.hourly.temperature_2m[i]),code:j.hourly.weathercode[i],pop:j.hourly.precipitation_probability[i]});});
     }catch(e){}
-    r.dates.forEach(d=>{ weatherData[d]= fc[d] || {...r.norm,fore:false}; });
+    r.dates.forEach(d=>{ weatherData[d]= fc[d] || {...r.norm,fore:false}; if(hr[d])hourlyData[d]=hr[d]; });
   }
   updateWeatherBadges();
 }
@@ -644,14 +648,31 @@ function updateWeatherBadges(){
   document.querySelectorAll('.weather-badge').forEach(el=>{
     const w=weatherData[el.dataset.wdate]; if(!w)return;
     el.querySelector('.w-icon').textContent=w.icon; el.querySelector('.w-temp').textContent=`${w.tmax}°/${w.tmin}°`;
-    el.title=(w.fore?'預報':'氣候概況')+`：${w.desc} · 高${w.tmax}° 低${w.tmin}°`;
+    el.title=(w.fore?'預報':'氣候概況')+`：${w.desc} · 高${w.tmax}° 低${w.tmin}° · 點看逐時`;
   });
+}
+function openHourly(date){
+  const arr=hourlyData[date];
+  if(!arr||!arr.length){toast('此日尚無逐時預報（超過 16 天範圍）');return;}
+  const rows=arr.filter(x=>x.h>=6&&x.h<=21).map(x=>{
+    const w=WMO[x.code]||['🌡️','—'];
+    const bar=x.pop>=60?'#c1432e':x.pop>=30?'#d2691e':'#6b8e4e';
+    return `<div style="display:flex;align-items:center;gap:.6rem;padding:.32rem .1rem;border-bottom:1px solid var(--border)">
+      <div style="width:46px;font-weight:700;font-size:.82rem">${String(x.h).padStart(2,'0')}:00</div>
+      <div style="font-size:1.1rem;width:24px;text-align:center">${w[0]}</div>
+      <div style="width:40px;font-size:.85rem">${x.temp}°</div>
+      <div style="flex:1;display:flex;align-items:center;gap:.5rem">
+        <div style="flex:1;height:7px;background:var(--bg3);border-radius:4px;overflow:hidden"><div style="width:${x.pop}%;height:100%;background:${bar}"></div></div>
+        <span style="width:36px;text-align:right;font-size:.74rem;color:var(--text2)">${x.pop}%</span>
+      </div></div>`;
+  }).join('');
+  openModal('🕐 逐時天氣預報',`<div style="font-size:.78rem;color:var(--text2);margin-bottom:.4rem">${date}　降雨機率（6:00–21:00）</div>${rows}`,null);
 }
 loadWeather();
 
 const modal=document.getElementById('modal'),modalTitle=document.getElementById('modal-title'),modalBody=document.getElementById('modal-body');
 let saveHandler=null;
-function openModal(title,html,onSave){modalTitle.textContent=title;modalBody.innerHTML=html;saveHandler=onSave;modal.classList.add('show');}
+function openModal(title,html,onSave){modalTitle.textContent=title;modalBody.innerHTML=html;saveHandler=onSave;document.getElementById('modal-save').style.display=onSave?'':'none';modal.classList.add('show');}
 function closeModal(){modal.classList.remove('show');saveHandler=null;document.getElementById('modal-save').textContent='儲存';}
 document.getElementById('modal-close').addEventListener('click',closeModal);
 document.getElementById('modal-cancel').addEventListener('click',closeModal);
