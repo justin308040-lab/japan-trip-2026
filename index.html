@@ -601,7 +601,9 @@ function renderShopping(){
   if(!state.shopping.length){
     shopGrid.innerHTML=`<div style="grid-column:1/-1;text-align:center;color:var(--text2);font-size:.85rem;padding:1.5rem">還沒有想買的東西，開啟編輯模式新增吧 🛍️</div>`;
   }
-  state.shopping.forEach(s=>{
+  // 未買的排前面、已買的排到最後（各自仍依 order）
+  const sorted=[...state.shopping].sort((a,b)=>(a.bought?1:0)-(b.bought?1:0)||(a.order||0)-(b.order||0));
+  sorted.forEach(s=>{
     const card=document.createElement('div');
     card.className='shop-card'+(s.bought?' bought':'');
     const photo=s.photoUrl?`<img class="shop-photo" src="${s.photoUrl}" alt="">`:`<div class="shop-photo placeholder">🛍️</div>`;
